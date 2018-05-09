@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Journey</string>
+    <string name="menu_action_update_activities">update_activities</string>
+</resources>
