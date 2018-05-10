@@ -1,4 +1,4 @@
-package com.angelmaker.journey;
+package com.angelmaker.journeyDatabase;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -44,11 +44,6 @@ public class ActivityInstance {
     public ActivityInstance(String newActivity){this.mActivity = newActivity;}
 
     public String getActivity(){return this.mActivity;}
-
-
-
-
-
 
 
 

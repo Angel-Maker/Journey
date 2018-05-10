@@ -10,7 +10,8 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.TextView;
+
+import com.angelmaker.journeyDatabase.ActivityInstance;
 
 import java.util.List;
 

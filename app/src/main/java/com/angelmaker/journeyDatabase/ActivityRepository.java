@@ -1,4 +1,4 @@
-package com.angelmaker.journey;
+package com.angelmaker.journeyDatabase;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
@@ -15,14 +15,14 @@ public class ActivityRepository {
     private ActivityDao activityDao;
     private LiveData<List<ActivityInstance>> allActivities;
 
-    ActivityRepository(Application application) {
+    public ActivityRepository(Application application) {
         ActivityRoomDatabase db = ActivityRoomDatabase.getDatabase(application);
         activityDao = db.activityDao();
         allActivities = activityDao.getAllActivities();
     }
 
 
-    LiveData<List<ActivityInstance>> getAllActivities() {
+    public LiveData<List<ActivityInstance>> getAllActivities() {
         return allActivities;
     }
 

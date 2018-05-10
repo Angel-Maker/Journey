@@ -4,6 +4,9 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 
+import com.angelmaker.journeyDatabase.ActivityInstance;
+import com.angelmaker.journeyDatabase.ActivityRepository;
+
 import java.util.List;
 
 /**

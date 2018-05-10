@@ -1,6 +1,5 @@
-package com.angelmaker.journey;
+package com.angelmaker.journeyDatabase;
 
-import android.app.Activity;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
