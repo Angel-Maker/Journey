@@ -5,15 +5,14 @@ android:layout_height="wrap_content"
 
 android:padding="10dp">
 
-<TextView
-    android:id="@+id/textView"
-    android:layout_width="262dp"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical"
-    android:layout_marginLeft="6dp"
-    android:textColor="#000"
-    android:textSize="24sp">
-</TextView>
+    <TextView
+        android:id="@+id/activityNameTV"
+        android:layout_width="262dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="6dp"
+        android:textColor="#000"
+        android:textSize="24sp"></TextView>
 
 <Button
     android:id="@+id/removeBtn"

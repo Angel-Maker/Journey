@@ -5,6 +5,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.util.Calendar;
+
 /**
  * Created by AngelPlayer on 5/3/2018.
  *
@@ -17,53 +19,59 @@ public class ActivityInstance {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    @NonNull
-    @ColumnInfo(name = "activity")    //What column mWord belongs to (defaults to "mWord" if not specified)
-    private String mActivity;
+    @ColumnInfo(name = "activityName")
+    private String mActivityName;           //Activity name
 
-    public ActivityInstance(String activity) {this.mActivity = activity;}
+    @ColumnInfo(name = "activityDescription")
+    private String mActivityDescription;    //Activity Description
 
-    public String getActivity(){return this.mActivity;}
+    @ColumnInfo(name = "startDate")
+    private String mStartDate;              //Date the activity was started on
+
+    @ColumnInfo(name = "currentDate")
+    private String mCurrentDate;            //Date of record instance
+
+    @ColumnInfo(name = "endDate")
+    private String mEndDate;                //Date the activity will be finished
+
+    @ColumnInfo(name = "completed")
+    private boolean mCompleted = false;     //If the activity has been completed
+
+    @ColumnInfo(name = "stared")
+    private boolean mStar = false;          //Marker for an important day (activity will always appear in end presentation)
+
+    @ColumnInfo(name = "note")
+    private String mNote;                   //Notes made about a specific day's activities
+
+    @ColumnInfo(name = "associatedFile")
+    private String mAssociatedFile;         //Associated file for the activity
+
+
+    public ActivityInstance() {}
+
+    public void setId(int newId){this.id = newId;}
+    public void setActivityName(String activityName){this.mActivityName = activityName;}
+    public void setActivityDescription(String activityDescription){this.mActivityDescription = activityDescription;}
+    public void setStartDate(String startDate){this.mStartDate = startDate;}
+    public void setCurrentDate(String currentDate){this.mCurrentDate = currentDate;}
+    public void setEndDate(String endDate){this.mEndDate = endDate;}
+    public void setCompleted(boolean completed){this.mCompleted = completed;}
+    public void setStar(boolean star){this.mStar = star;}
+    public void setNote(String note){this.mNote = note;}
+    public void setAssociatedFile(String associatedFile){this.mAssociatedFile = associatedFile;}
+
     public int getId(){return this.id;}
-    public void setId(int newId){this.id = newId;};
+    public String getActivityName(){return this.mActivityName;}
+    public String getActivityDescription(){return this.mActivityDescription;}
+    public String getStartDate(){return this.mStartDate;}
+    public String getCurrentDate(){return this.mCurrentDate;}
+    public String getEndDate(){return this.mEndDate;}
+    public boolean getCompleted(){return this.mCompleted;}
+    public boolean getStar(){return this.mStar;}
+    public String getNote(){return this.mNote;}
+    public String getAssociatedFile(){return this.mAssociatedFile;}
 }
 
 
 
 
-
-/*
-@Entity(tableName = "activities_table")
-public class ActivityInstance {
-
-    @PrimaryKey
-    @NonNull
-    @ColumnInfo(name = "word")
-    private String mActivity;        //Name of the activity
-
-    public ActivityInstance(String newActivity){this.mActivity = newActivity;}
-
-    public String getActivity(){return this.mActivity;}
-
-
-
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo
-    private int id;
-
-    @ColumnInfo
-    private int date = 1;           //Date the activity was done on    (Update later to date type variable)
-
-    @ColumnInfo
-    private boolean completed = false;     //If the activity has been completed
-
-    @ColumnInfo
-    private String associatedFile;  //Will be used later to link relevant documentation of completion
-
-
-
-    public String getId(){return this.id;}
-    public String getDate(){return this.date;}
-    public String getCompleted(){return this.completed;}
-    public String getAssociatedFile(){return this.associatedFile;}
-*/

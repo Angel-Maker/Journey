@@ -22,18 +22,18 @@ public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActi
 
     class ActivityViewHolder extends RecyclerView.ViewHolder
     {
-        private final TextView activityItemView;
+        private final TextView activityNameTV;
         private final Button removeBtn;
 
         private ActivityViewHolder(View itemView) {
             super(itemView);
-            activityItemView = itemView.findViewById(R.id.textView);
+            activityNameTV = itemView.findViewById(R.id.activityNameTV);
             removeBtn = itemView.findViewById(R.id.removeBtn);
         }
     }
 
     private final LayoutInflater inflater;
-    private List<ActivityInstance> activities; // Cached copy of words
+    private List<String> activityNames; // Cached copy of words
 
 
     UpdateActivitiesListAdapter(Context context)
@@ -55,17 +55,17 @@ public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActi
     @Override
     public void onBindViewHolder(ActivityViewHolder holder, int position)
     {
-        if (activities != null)
+        if (activityNames != null)
         {
-            final ActivityInstance current = activities.get(position);
-            holder.activityItemView.setText(current.getActivity());
+            final String current = activityNames.get(position);
+            holder.activityNameTV.setText(current);
 
             holder.removeBtn.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
                 {
-                    activityViewModel.delete(current);;
+                    activityViewModel.deleteFullActivity(current);;
                 }
             });
         }
@@ -73,13 +73,13 @@ public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActi
         else
             {
                 // Covers the case of data not being ready yet.
-                holder.activityItemView.setText("No Activities");
+                holder.activityNameTV.setText("No Activities");
             }
     }
 
-    void setActivities(List<ActivityInstance> newActivities)
+    void setActivityNames(List<String> newActivityNames)
     {
-        activities = newActivities;
+        activityNames = newActivityNames;
         notifyDataSetChanged();
     }
 
@@ -88,8 +88,8 @@ public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActi
     @Override
     public int getItemCount()
     {
-        if (activities != null)
-            return activities.size();
+        if (activityNames != null)
+            return activityNames.size();
         else return 0;
     }
 }

@@ -25,8 +25,13 @@ public class UpdateActivities extends AppCompatActivity {
         setContentView(R.layout.activity_update_activities);
 
         //Set viewmodel for database manipulation
-        activityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
+        activityViewModel = new ActivityViewModel(getApplication());
 
+        setRecyclerView();
+    }
+
+    private void setRecyclerView()
+    {
         //RecyclerView Setup
         RecyclerView recyclerView = findViewById(R.id.activitiesRV);
         final UpdateActivitiesListAdapter adapter = new UpdateActivitiesListAdapter(this);
@@ -37,14 +42,17 @@ public class UpdateActivities extends AppCompatActivity {
         DividerItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(itemDecoration);
 
+
         //Link view model to database
-        activityViewModel.getAllActivites().observe(this, new Observer<List<ActivityInstance>>() {
+        activityViewModel.getActivityNames().observe(this, new Observer<List<String>>() {
             @Override
-            public void onChanged(@Nullable final List<ActivityInstance> activities) {
+            public void onChanged(@Nullable final List<String> activityNames) {
                 //Executed whenever the observed object changes
-                adapter.setActivities(activities);   // Update the cached copy of the words in the adapter.
+                adapter.setActivityNames(activityNames);   // Update the cached copy of the words in the adapter.
             }
         });
+
+
     }
 
 

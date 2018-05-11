@@ -9,9 +9,11 @@ import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
@@ -25,8 +27,9 @@ import java.util.Locale;
 public class DailyActivities extends AppCompatActivity {
 
     //Variables to record current date being accessed
-    Calendar selectedDate;
-    SimpleDateFormat sdf = new SimpleDateFormat("MMM dd", Locale.getDefault());
+    private Calendar selectedDate;
+    private SimpleDateFormat sdfDisplay = new SimpleDateFormat("MMM dd", Locale.getDefault());
+    private SimpleDateFormat sdfDB = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
 
     //Gesture for day swipe transition
     private GestureDetectorCompat gestureObject;
@@ -40,7 +43,7 @@ public class DailyActivities extends AppCompatActivity {
         setContentView(R.layout.activity_daily_activities);
 
         processDate();
-        setActionBar(sdf.format(selectedDate.getTime()));
+        setActionBar(sdfDisplay.format(selectedDate.getTime()));
         setRecyclerView();
 
         gestureObject = new GestureDetectorCompat(this, new LearnGesture());
@@ -71,9 +74,10 @@ public class DailyActivities extends AppCompatActivity {
     }
 
 
-    private void setRecyclerView(){
+    private void setRecyclerView()
+    {
         //Initialize view model
-        activityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
+        activityViewModel = new ActivityViewModel(getApplication(), sdfDB.format(selectedDate.getTime()));
 
         //RecyclerView Setup
         RecyclerView recyclerView = findViewById(R.id.dailyActivityRV);
@@ -82,8 +86,11 @@ public class DailyActivities extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(itemDecoration);
+
         //Link view model to database
-        activityViewModel.getAllActivites().observe(this, new Observer<List<ActivityInstance>>() {
+        activityViewModel.getDailyActivities().observe(this, new Observer<List<ActivityInstance>>() {
             @Override
             public void onChanged(@Nullable final List<ActivityInstance> activities) {
                 //Executed whenever the observed object changes
@@ -94,37 +101,45 @@ public class DailyActivities extends AppCompatActivity {
 
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(MotionEvent event)
+    {
         this.gestureObject.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
 
-    class LearnGesture extends GestureDetector.SimpleOnGestureListener{
+
+    class LearnGesture extends GestureDetector.SimpleOnGestureListener
+    {
         @Override
         public boolean onFling(MotionEvent event1, MotionEvent event2,
                                float velocityX, float velocityY){
             if(event2.getX() > event1.getX()){
                 selectedDate.add(Calendar.DATE, -1);
-                changeDate();
+                changeDate(0);
             }
 
             else if (event2.getX() < event1.getX()){
                 selectedDate.add(Calendar.DATE, 1);
-                changeDate();
+                changeDate(1);
             }
-
-
             return true;
         }
     }
 
-    public void changeDate(){
+
+    //Creates an new activity for the new day (0 = one day ago, 1 = tomorrow)
+    public void changeDate(int direction)
+    {
         Intent dailyActivities = new Intent(this, DailyActivities.class);
 
         dailyActivities.putExtra("EXTRA_CURRENT_DATE", selectedDate.get(Calendar.DATE));
         dailyActivities.putExtra("EXTRA_CURRENT_MONTH", selectedDate.get(Calendar.MONTH));
 
         finish();
+
+        if(direction == 0){overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);}
+        else if(direction == 1){overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);}
+
         startActivity(dailyActivities);
     }
 

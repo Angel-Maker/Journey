@@ -62,7 +62,7 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
         if (activities != null)
         {
             final ActivityInstance current = activities.get(position);
-            holder.completionCB.setText(current.getActivity());
+            holder.completionCB.setText(current.getActivityName());
         }
 
         else

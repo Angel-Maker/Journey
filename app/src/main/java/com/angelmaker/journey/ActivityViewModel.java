@@ -7,6 +7,7 @@ import android.arch.lifecycle.LiveData;
 import com.angelmaker.journeyDatabase.ActivityInstance;
 import com.angelmaker.journeyDatabase.ActivityRepository;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -14,18 +15,37 @@ import java.util.List;
  */
 
 public class ActivityViewModel extends AndroidViewModel{
-            private ActivityRepository repository;
-            private LiveData<List<ActivityInstance>> allActivities;
+    private ActivityRepository repository;
+    private LiveData<List<String>> activityNames;
+    private LiveData<List<ActivityInstance>> dailyActivities;
 
-            public ActivityViewModel (Application application) {
-                super(application);
-                repository = new ActivityRepository(application);
-                allActivities = repository.getAllActivities();
-            }
 
-            LiveData<List<ActivityInstance>> getAllActivites() {return allActivities;}
 
-            public void insert(ActivityInstance activityInstance) {repository.insert(activityInstance);}
-            public void delete(ActivityInstance activityInstance) {repository.delete(activityInstance);}
+    public ActivityViewModel (Application application) {
+        super(application);
+        repository = new ActivityRepository(application);
+        activityNames = repository.getActivityNames();
+
+    }
+
+
+    public ActivityViewModel (Application application, String viewedDate) {
+        super(application);
+        repository = new ActivityRepository(application, viewedDate);
+        dailyActivities = repository.getDaysActivities();
+    }
+
+
+
+    LiveData<List<String>> getActivityNames() {return activityNames;}
+    LiveData<List<ActivityInstance>> getDailyActivities() {return dailyActivities;}
+
+
+    public List<ActivityInstance> getFullActivity(String getActivityName) { return repository.getFullActivity(getActivityName); }
+    public void insertMany(List<ActivityInstance> activityInstances) {repository.insertMany(activityInstances);}
+    public void update (ActivityInstance activityInstance) {repository.update(activityInstance);}
+    public void updateMany(List<ActivityInstance> activityInstances) {repository.updateMany(activityInstances);}
+    public void deleteMany(List<ActivityInstance> activityInstances) {repository.deleteMany(activityInstances);}
+    public void deleteFullActivity(String removeActivityName) {repository.deleteFullActivity(removeActivityName); }
 }
 
