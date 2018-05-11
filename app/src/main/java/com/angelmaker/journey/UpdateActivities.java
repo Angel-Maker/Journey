@@ -37,7 +37,7 @@ public class UpdateActivities extends AppCompatActivity {
         DividerItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(itemDecoration);
 
-
+        //Link view model to database
         activityViewModel.getAllActivites().observe(this, new Observer<List<ActivityInstance>>() {
             @Override
             public void onChanged(@Nullable final List<ActivityInstance> activities) {

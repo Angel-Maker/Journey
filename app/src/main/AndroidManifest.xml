@@ -17,7 +17,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".UpdateActivities" />
-        <activity android:name=".NewActivity"></activity>
+        <activity android:name=".NewActivity" />
+        <activity
+            android:name=".DailyActivities"
+            android:parentActivityName="com.angelmaker.journey.MainActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.angelmaker.journey.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
