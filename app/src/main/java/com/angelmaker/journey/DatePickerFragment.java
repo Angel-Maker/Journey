@@ -51,8 +51,16 @@ public class DatePickerFragment extends DialogFragment
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
         if(dateTV != null){
-            Log.i("selectedDate", "Date selected: " + year+"/"+month+"/"+day);
-            dateTV.setText(year+"/"+month+"/"+day);
+            month++;
+
+            String displayYear = Integer.toString(year);
+            String displayMonth = Integer.toString(month);
+            String displayDay = Integer.toString(day);
+
+            if(month<10){ displayMonth = "0"+displayMonth; }
+            if(day<10){ displayDay = "0"+displayDay; }
+
+            dateTV.setText(displayYear+"/"+displayMonth+"/"+displayDay);
         }
     }
 }
