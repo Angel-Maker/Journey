@@ -17,17 +17,19 @@
             android:id="@+id/completionCB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:text="CheckBox"
-            android:textSize="24sp"
-            android:layout_gravity="center_vertical"/>
+            android:textSize="24sp" />
 
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            app:srcCompat="@android:drawable/btn_star"
-            android:background="#00ffffff"/>
+        <CheckBox
+            android:id="@+id/starCB"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:button="@android:drawable/btn_star"
+            android:gravity="center" />
+
 
 
     </LinearLayout>

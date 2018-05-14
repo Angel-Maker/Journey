@@ -1,9 +1,11 @@
 package com.angelmaker.journey;
 
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBar;
@@ -33,6 +35,7 @@ public class DailyActivities extends AppCompatActivity {
 
     //Gesture for day swipe transition
     private GestureDetectorCompat gestureObject;
+    private DailyActivitiesListAdapter adapter = null;
 
     //Variable to access database
     private ActivityViewModel activityViewModel;
@@ -81,8 +84,9 @@ public class DailyActivities extends AppCompatActivity {
 
         //RecyclerView Setup
         RecyclerView recyclerView = findViewById(R.id.dailyActivityRV);
-        final DailyActivitiesListAdapter adapter = new DailyActivitiesListAdapter(this);
+        adapter = new DailyActivitiesListAdapter(this);
         adapter.setViewModel(activityViewModel);
+        adapter.setActivity(DailyActivities.this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -143,4 +147,39 @@ public class DailyActivities extends AppCompatActivity {
         startActivity(dailyActivities);
     }
 
+
+
+
+    private static final int READ_REQUEST_CODE = 42;
+    /**
+     * Fires an intent to spin up the "file chooser" UI and select an image.
+     */
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent resultData) {
+
+        Log.i("zzz", "Result retrieved");
+        // The ACTION_OPEN_DOCUMENT intent was sent with the request code
+        // READ_REQUEST_CODE. If the request code seen here doesn't match, it's the
+        // response to some other intent, and the code below shouldn't run at all.
+
+        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Log.i("zzz", "Request code acknowledged");
+            // The document selected by the user won't be returned in the intent.
+            // Instead, a URI to that document will be contained in the return intent
+            // provided to this method as a parameter.
+            // Pull that URI using resultData.getData().
+            Uri uri = null;
+            if (resultData != null) {
+                Log.i("zzz", "Result data is non-null");
+                uri = resultData.getData();
+                Log.i("zzz", "Uri: " + uri.toString());
+                ActivityInstance changedActivity = adapter.getCurrentActivity();
+                changedActivity.setAssociatedFile(uri.toString());
+                activityViewModel.update(changedActivity);
+            }
+        }
+    }
 }
