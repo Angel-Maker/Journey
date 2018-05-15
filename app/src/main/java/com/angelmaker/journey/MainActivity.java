@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 
 import java.text.SimpleDateFormat;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private SimpleDateFormat sdfDB = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
     private Calendar selectedDate;
     private Button dailyActivityBtn;
+    private DatePicker currentDatePicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,16 @@ public class MainActivity extends AppCompatActivity {
 
         dailyActivityBtn = findViewById(R.id.dailyActivityBtn);
         dailyActivityBtn.setText(sdfDB.format(selectedDate.getTime()));
+
+        currentDatePicker = findViewById(R.id.currentDatePicker);
+        currentDatePicker.init(selectedDate.get(Calendar.YEAR), selectedDate.get(Calendar.MONTH), selectedDate.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener() {
+
+            @Override
+            public void onDateChanged(DatePicker datePicker, int year, int month, int dayOfMonth) {
+                selectedDate.set(year, month, dayOfMonth);
+                dailyActivityBtn.setText(sdfDB.format(selectedDate.getTime()));
+            }
+        });
     }
 
 

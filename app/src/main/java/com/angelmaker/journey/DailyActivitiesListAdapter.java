@@ -3,6 +3,9 @@ package com.angelmaker.journey;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -101,7 +104,8 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
                 }
             });
 
-            if (current.getAssociatedFile() != null) {holder.fileTV.setText(current.getAssociatedFile());}
+
+            if (current.getAssociatedFile() != null) {holder.fileTV.setText(getFileName(Uri.parse(current.getAssociatedFile())));}
             else{holder.fileTV.setText("Select a file to attach");}
 
             //Setup file selector TextView
@@ -116,7 +120,7 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
             });
 
 
-            //Setup file selector TextView
+            //Setup file remover Button
             holder.removeFileBtn.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -157,6 +161,7 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
 
 
 
+
     ActivityInstance currentActivity;
     public ActivityInstance getCurrentActivity(){return currentActivity;}
 
@@ -171,7 +176,8 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
     public void performFileSearch() {
         // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
         // browser.
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        //Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 
         // Filter to only show results that can be "opened", such as a
         // file (as opposed to a list of contacts or timezones)
@@ -185,6 +191,35 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
 
         Log.i("zzz", "activity start");
         activity.startActivityForResult(intent, READ_REQUEST_CODE);
+    }
+
+
+
+
+
+
+    public String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = activity.getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+
+        //If no name is returned, return last part of URI
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
     }
 }
 

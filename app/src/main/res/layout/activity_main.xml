@@ -37,7 +37,7 @@
         app:layout_constraintVertical_bias="0.267" />
 
     <CalendarView
-        android:id="@+id/calendarView"
+        android:id="@+id/currentDatePicker"
         android:layout_width="wrap_content"
         android:layout_height="304dp"
         android:layout_marginBottom="16dp"
