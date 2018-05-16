@@ -1,22 +1,30 @@
 package com.angelmaker.journey;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.angelmaker.journeyDatabase.ActivityInstance;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -24,6 +32,8 @@ import java.util.List;
  */
 
 public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivitiesListAdapter.ActivityViewHolder> {
+
+    private final int PERMISSIONS_REQUEST_MANAGE_DOCUMENTS = 2048;
 
     private ActivityViewModel activityViewModel;
 
@@ -115,7 +125,41 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
                 public void onClick(View view)
                 {
                     currentActivity = current;
-                    performFileSearch();
+
+                    if (current.getAssociatedFile() != null)
+                    {
+                        if (ContextCompat.checkSelfPermission(activity.getApplicationContext(),
+                                Manifest.permission.READ_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED)
+                        {
+                            // Permission is not granted
+                            // Should we show an explanation?
+                            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE))
+                            {
+                                // Show an explanation to the user
+                                Toast.makeText(activity, "Permission needed to open your attached file", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                // No explanation needed; request the permission
+                                ActivityCompat.requestPermissions(activity,
+                                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                        PERMISSIONS_REQUEST_MANAGE_DOCUMENTS);
+                            }
+                        }
+
+                        else {
+                            Intent openFile = new Intent();
+                            openFile.setAction(Intent.ACTION_VIEW);
+                            Uri uri = Uri.parse(current.getAssociatedFile());
+                            openFile.setData(uri);
+                            openFile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            activity.startActivity(openFile);
+                        }
+                    }
+                    else {
+                        performFileSearch();
+                    }
                 }
             });
 
@@ -140,6 +184,7 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
             holder.completionCB.setText("No Activities");
         }
     }
+
 
     void setActivities(List<ActivityInstance> newActivities)
     {
@@ -176,8 +221,8 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
     public void performFileSearch() {
         // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
         // browser.
-        //Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        //Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 
         // Filter to only show results that can be "opened", such as a
         // file (as opposed to a list of contacts or timezones)

@@ -37,7 +37,7 @@ public class ActivityInstance {
     @ColumnInfo(name = "completed")
     private boolean mCompleted = false;     //If the activity has been completed
 
-    @ColumnInfo(name = "stared")
+    @ColumnInfo(name = "starred")
     private boolean mStar = false;          //Marker for an important day (activity will always appear in end presentation)
 
     @ColumnInfo(name = "note")

@@ -16,6 +16,7 @@ public class ActivityRepository {
     private ActivityDao activityDao;
     private LiveData<List<String>> activityNames;
     private LiveData<List<ActivityInstance>> daysActivities;
+    private LiveData<List<String>> uniqueStarred;
 
     //Constructor for updateActivities recycler view
     public ActivityRepository(Application application) {
@@ -23,6 +24,7 @@ public class ActivityRepository {
         activityDao = db.activityDao();
         //Find all unique activity category names
         activityNames = activityDao.getUniqueActivityNames();
+        uniqueStarred = activityDao.getUniqueStarred();
     }
 
     //Constructor for dailyActivities recycler view
@@ -33,20 +35,31 @@ public class ActivityRepository {
         daysActivities = activityDao.getDailyActivities(viewedDate);
     }
 
-
-
-
-    public LiveData<List<String>> getActivityNames() {
-        return activityNames;
-    }
-    public LiveData<List<ActivityInstance>> getDaysActivities() {
-        return daysActivities;
-    }
+    public LiveData<List<String>> getUniqueStarred() { return uniqueStarred; }
+    public LiveData<List<String>> getActivityNames() { return activityNames; }
+    public LiveData<List<ActivityInstance>> getDaysActivities() { return daysActivities; }
 
     //Returns all of a named activity (used to find corresponding unique ID for updating and Progression Reflection)
     public List<ActivityInstance> getFullActivity(String getActivityName) {
         List<ActivityInstance> fullActivity = activityDao.getFullActivity(getActivityName);
         return fullActivity;
+    }
+
+
+
+    private static class getUniqueStarredAsyncTask extends AsyncTask<List<String>, Void, Void> {
+
+        private ActivityDao asyncTaskDao;
+
+        getUniqueStarredAsyncTask(ActivityDao dao) {
+            asyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final List<String>... lists) {
+            asyncTaskDao.getUniqueStarred();
+            return null;
+        }
     }
 
 

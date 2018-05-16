@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GestureDetectorCompat;
@@ -18,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 import com.angelmaker.journeyDatabase.ActivityInstance;
 
@@ -27,6 +29,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class DailyActivities extends AppCompatActivity {
+
+    private final int PERMISSIONS_REQUEST_MANAGE_DOCUMENTS = 2048;
 
     //Variables to record current date being accessed
     private Calendar selectedDate;
@@ -180,6 +184,36 @@ public class DailyActivities extends AppCompatActivity {
                 changedActivity.setAssociatedFile(uri.toString());
                 activityViewModel.update(changedActivity);
             }
+        }
+    }
+
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_MANAGE_DOCUMENTS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    Intent openFile = new Intent();
+                    openFile.setAction(Intent.ACTION_VIEW);
+                    Uri uri = Uri.parse(adapter.getCurrentActivity().getAssociatedFile());
+                    openFile.setData(uri);
+                    openFile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    this.startActivity(openFile);
+                }
+                else {
+                    Toast.makeText(this, "Permission was denied - File cannot be shown", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
         }
     }
 }

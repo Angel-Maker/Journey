@@ -18,6 +18,7 @@ public class ActivityViewModel extends AndroidViewModel{
     private ActivityRepository repository;
     private LiveData<List<String>> activityNames;
     private LiveData<List<ActivityInstance>> dailyActivities;
+    private LiveData<List<String>> uniqueStarred;
 
 
 
@@ -25,9 +26,8 @@ public class ActivityViewModel extends AndroidViewModel{
         super(application);
         repository = new ActivityRepository(application);
         activityNames = repository.getActivityNames();
-
+        uniqueStarred = repository.getUniqueStarred();
     }
-
 
     public ActivityViewModel (Application application, String viewedDate) {
         super(application);
@@ -36,7 +36,7 @@ public class ActivityViewModel extends AndroidViewModel{
     }
 
 
-
+    LiveData<List<String>> getUniqueStarred() {return uniqueStarred;}
     LiveData<List<String>> getActivityNames() {return activityNames;}
     LiveData<List<ActivityInstance>> getDailyActivities() {return dailyActivities;}
 

@@ -36,13 +36,39 @@
         app:layout_constraintTop_toTopOf="@+id/mainMenuToolbar"
         app:layout_constraintVertical_bias="0.267" />
 
-    <CalendarView
-        android:id="@+id/currentDatePicker"
-        android:layout_width="wrap_content"
-        android:layout_height="304dp"
+
+    <com.github.sundeepk.compactcalendarview.CompactCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/compactcalendar_view"
+        android:layout_width="fill_parent"
+        android:layout_height="250dp"
         android:layout_marginBottom="16dp"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        app:compactCalendarBackgroundColor="#FFFFFF"
+        app:compactCalendarCurrentDayBackgroundColor="#DFDFDF"
+        app:compactCalendarCurrentSelectedDayBackgroundColor="#00FFFF"
+        app:compactCalendarMultiEventIndicatorColor="#EBEB00"
+        app:compactCalendarTargetHeight="250dp"
+        app:compactCalendarTextColor="#000000"
+        app:compactCalendarTextSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timeWindowTV" />
 
+    <TextView
+        android:id="@+id/timeWindowTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:text="Month"
+        android:textColor="@android:color/black"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dailyActivityBtn" />
 </android.support.constraint.ConstraintLayout>

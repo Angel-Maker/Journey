@@ -10,7 +10,7 @@ import android.content.Context;
  * Created by AngelPlayer on 5/3/2018.
  */
 
-@Database(entities = {ActivityInstance.class}, version = 3, exportSchema = false)
+@Database(entities = {ActivityInstance.class}, version = 4, exportSchema = false)
 public abstract class ActivityRoomDatabase extends RoomDatabase {
 
     public abstract ActivityDao activityDao();
