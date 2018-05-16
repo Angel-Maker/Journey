@@ -25,6 +25,10 @@ public interface ActivityDao {
     @Query ("SELECT DISTINCT activityName FROM activities_table")
     LiveData<List<String>> getUniqueActivityNames();
 
+    //Finds all unique days that have a star on it
+    @Query ("SELECT DISTINCT currentDate FROM activities_table WHERE starred = 1")
+    LiveData<List<String>> getUniqueStarred();
+
     //Adds a list of activities
     @Insert                      //Todo - need conflict resolution as the id will be the diff even if name is the same
     void insertMany(List<ActivityInstance> activityInstanceList);
@@ -44,8 +48,6 @@ public interface ActivityDao {
     //Returns all of a named activity (used to find corresponding unique ID for updating and Progression Reflection)
     @Query ("Select * from activities_table WHERE activityName = :getActivityName")
     List<ActivityInstance> getFullActivity(String getActivityName);
-
-
 
 
     //Find all activities for a specific day
