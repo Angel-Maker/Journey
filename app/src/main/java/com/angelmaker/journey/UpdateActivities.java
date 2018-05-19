@@ -35,6 +35,7 @@ public class UpdateActivities extends AppCompatActivity {
         //RecyclerView Setup
         RecyclerView recyclerView = findViewById(R.id.activitiesRV);
         final UpdateActivitiesListAdapter adapter = new UpdateActivitiesListAdapter(this);
+        adapter.setAndroidActivity(this);
         adapter.setViewModel(activityViewModel);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -51,8 +52,6 @@ public class UpdateActivities extends AppCompatActivity {
                 adapter.setActivityNames(activityNames);   // Update the cached copy of the words in the adapter.
             }
         });
-
-
     }
 
 

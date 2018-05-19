@@ -3,9 +3,7 @@ package com.angelmaker.journey;
 
 import android.app.Activity;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GestureDetectorCompat;
@@ -19,7 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.widget.Toast;
 
 import com.angelmaker.journeyDatabase.ActivityInstance;
 
@@ -90,7 +87,7 @@ public class DailyActivities extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.dailyActivityRV);
         adapter = new DailyActivitiesListAdapter(this);
         adapter.setViewModel(activityViewModel);
-        adapter.setActivity(DailyActivities.this);
+        adapter.setAndroidActivity(DailyActivities.this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -135,7 +132,7 @@ public class DailyActivities extends AppCompatActivity {
     }
 
 
-    //Creates an new activity for the new day (0 = one day ago, 1 = tomorrow)
+    //Creates an new androidActivity for the new day (0 = one day ago, 1 = tomorrow)
     public void changeDate(int direction)
     {
         Intent dailyActivities = new Intent(this, DailyActivities.class);
@@ -186,11 +183,34 @@ public class DailyActivities extends AppCompatActivity {
             }
         }
     }
+}
 
 
 
 
-    @Override
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+                        Code to ask permissions
+                        Originally believed to be needed to open files but turned out to be unnecessary
+                        Leaving code here in the event it is needed for further file manipulation
+
+
+
+                        @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -211,9 +231,8 @@ public class DailyActivities extends AppCompatActivity {
                 }
                 return;
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request.
         }
     }
-}
+
+
+    */

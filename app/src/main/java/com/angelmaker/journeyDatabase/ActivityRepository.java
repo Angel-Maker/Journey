@@ -47,21 +47,6 @@ public class ActivityRepository {
 
 
 
-    private static class getUniqueStarredAsyncTask extends AsyncTask<List<String>, Void, Void> {
-
-        private ActivityDao asyncTaskDao;
-
-        getUniqueStarredAsyncTask(ActivityDao dao) {
-            asyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final List<String>... lists) {
-            asyncTaskDao.getUniqueStarred();
-            return null;
-        }
-    }
-
 
 
     //Adds a list of activities

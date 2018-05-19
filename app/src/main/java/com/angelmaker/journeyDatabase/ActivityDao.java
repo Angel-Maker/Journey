@@ -64,7 +64,7 @@ public interface ActivityDao {
 //Adds a list of activities --> list is created recursively before being entered into DB
 //Find all unique activity categories names(to populate lists)
 //Remove all instances of one activity category
-//Edit one activity category  (Remove any activity instances not in new date range, Insert activities to fill new date range, modify all others)
+//Edit one androidActivity category  (Remove any androidActivity instances not in new date range, Insert activities to fill new date range, modify all others)
 
 //----Daily activity----
 //Find all activities for a specific day (to populate lists)

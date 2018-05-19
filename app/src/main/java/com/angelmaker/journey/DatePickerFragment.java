@@ -27,14 +27,12 @@ public class DatePickerFragment extends DialogFragment
 
     private TextView dateTV;
 
+    private int year;
+    private int month;
+    private int day;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // Use the current date as the default date in the picker
-        final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
-
         //Todo Decide whether to use Holo_Light or calendar view
         // Create a new instance of DatePickerDialog and return it
         DatePickerDialog dialog = new DatePickerDialog(
@@ -45,6 +43,13 @@ public class DatePickerFragment extends DialogFragment
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         return dialog;
+    }
+
+    public void setSpinnerDate(Calendar spinnerCalendar)
+    {
+        year = spinnerCalendar.get(Calendar.YEAR);
+        month = spinnerCalendar.get(Calendar.MONTH);
+        day = spinnerCalendar.get(Calendar.DAY_OF_MONTH);
     }
 
     public void setTV(TextView newDateTV){dateTV = newDateTV;}

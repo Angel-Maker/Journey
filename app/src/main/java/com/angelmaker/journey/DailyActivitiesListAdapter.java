@@ -1,30 +1,22 @@
 package com.angelmaker.journey;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.angelmaker.journeyDatabase.ActivityInstance;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -128,34 +120,12 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
 
                     if (current.getAssociatedFile() != null)
                     {
-                        if (ContextCompat.checkSelfPermission(activity.getApplicationContext(),
-                                Manifest.permission.READ_EXTERNAL_STORAGE)
-                                != PackageManager.PERMISSION_GRANTED)
-                        {
-                            // Permission is not granted
-                            // Should we show an explanation?
-                            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-                                    Manifest.permission.READ_EXTERNAL_STORAGE))
-                            {
-                                // Show an explanation to the user
-                                Toast.makeText(activity, "Permission needed to open your attached file", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                // No explanation needed; request the permission
-                                ActivityCompat.requestPermissions(activity,
-                                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                        PERMISSIONS_REQUEST_MANAGE_DOCUMENTS);
-                            }
-                        }
-
-                        else {
-                            Intent openFile = new Intent();
-                            openFile.setAction(Intent.ACTION_VIEW);
-                            Uri uri = Uri.parse(current.getAssociatedFile());
-                            openFile.setData(uri);
-                            openFile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            activity.startActivity(openFile);
-                        }
+                        Intent openFile = new Intent();
+                        openFile.setAction(Intent.ACTION_VIEW);
+                        Uri uri = Uri.parse(current.getAssociatedFile());
+                        openFile.setData(uri);
+                        openFile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        androidActivity.startActivity(openFile);
                     }
                     else {
                         performFileSearch();
@@ -206,12 +176,12 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
 
 
 
-
+    //
     ActivityInstance currentActivity;
     public ActivityInstance getCurrentActivity(){return currentActivity;}
 
-    public Activity activity;
-    public void setActivity(Activity newActivity){activity = newActivity;}
+    public Activity androidActivity;
+    public void setAndroidActivity(Activity newAndroidActivity){ androidActivity = newAndroidActivity;}
 
 
     private static final int READ_REQUEST_CODE = 42;
@@ -234,8 +204,8 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
         // it would be "*/*".
         intent.setType("image/*");
 
-        Log.i("zzz", "activity start");
-        activity.startActivityForResult(intent, READ_REQUEST_CODE);
+        Log.i("zzz", "androidActivity start");
+        androidActivity.startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
 
@@ -246,7 +216,7 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
     public String getFileName(Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
-            Cursor cursor = activity.getContentResolver().query(uri, null, null, null, null);
+            Cursor cursor = androidActivity.getContentResolver().query(uri, null, null, null, null);
             try {
                 if (cursor != null && cursor.moveToFirst()) {
                     result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
@@ -268,3 +238,63 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+                        Code to ask permissions
+                        Originally believed to be needed to open files but turned out to be unnecessary
+                        Leaving code here in the event it is needed for further file manipulation
+
+                        if (ContextCompat.checkSelfPermission(androidActivity.getApplicationContext(),
+                                Manifest.permission.READ_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED)
+                        {
+                            // Permission is not granted
+                            // Should we show an explanation?
+                            if (ActivityCompat.shouldShowRequestPermissionRationale(androidActivity,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE))
+                            {
+                                // Show an explanation to the user
+                                Toast.makeText(androidActivity, "Permission needed to open your attached file", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                // No explanation needed; request the permission
+                                ActivityCompat.requestPermissions(androidActivity,
+                                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                        PERMISSIONS_REQUEST_MANAGE_DOCUMENTS);
+                            }
+                        }
+
+                        else {
+                            Intent openFile = new Intent();
+                            openFile.setAction(Intent.ACTION_VIEW);
+                            Uri uri = Uri.parse(current.getAssociatedFile());
+                            openFile.setData(uri);
+                            openFile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            androidActivity.startActivity(openFile);
+                        }*/

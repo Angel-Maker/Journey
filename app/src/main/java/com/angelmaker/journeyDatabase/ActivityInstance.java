@@ -10,7 +10,7 @@ import java.util.Calendar;
 /**
  * Created by AngelPlayer on 5/3/2018.
  *
- * Currently only the string 'activity' is being implemented
+ * Currently only the string 'androidActivity' is being implemented
  */
 
 @Entity(tableName = "activities_table")   // What table the entry exists in
@@ -26,25 +26,25 @@ public class ActivityInstance {
     private String mActivityDescription;    //Activity Description
 
     @ColumnInfo(name = "startDate")
-    private String mStartDate;              //Date the activity was started on
+    private String mStartDate;              //Date the androidActivity was started on
 
     @ColumnInfo(name = "currentDate")
     private String mCurrentDate;            //Date of record instance
 
     @ColumnInfo(name = "endDate")
-    private String mEndDate;                //Date the activity will be finished
+    private String mEndDate;                //Date the androidActivity will be finished
 
     @ColumnInfo(name = "completed")
-    private boolean mCompleted = false;     //If the activity has been completed
+    private boolean mCompleted = false;     //If the androidActivity has been completed
 
     @ColumnInfo(name = "starred")
-    private boolean mStar = false;          //Marker for an important day (activity will always appear in end presentation)
+    private boolean mStar = false;          //Marker for an important day (androidActivity will always appear in end presentation)
 
     @ColumnInfo(name = "note")
     private String mNote;                   //Notes made about a specific day's activities
 
     @ColumnInfo(name = "associatedFile")
-    private String mAssociatedFile;         //Associated file for the activity
+    private String mAssociatedFile;         //Associated file for the androidActivity
 
 
     public ActivityInstance() {}

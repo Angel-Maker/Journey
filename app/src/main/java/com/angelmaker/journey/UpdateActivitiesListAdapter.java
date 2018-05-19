@@ -1,11 +1,16 @@
 package com.angelmaker.journey;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.angelmaker.journeyDatabase.ActivityInstance;
@@ -24,11 +29,13 @@ public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActi
     {
         private final TextView activityNameTV;
         private final Button removeBtn;
+        private final ImageButton editBtn;
 
         private ActivityViewHolder(View itemView) {
             super(itemView);
             activityNameTV = itemView.findViewById(R.id.activityNameTV);
             removeBtn = itemView.findViewById(R.id.removeBtn);
+            editBtn = itemView.findViewById(R.id.editBtn);
         }
     }
 
@@ -65,7 +72,18 @@ public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActi
                 @Override
                 public void onClick(View view)
                 {
-                    activityViewModel.deleteFullActivity(current);;
+                    activityViewModel.deleteFullActivity(current);
+                }
+            });
+
+            holder.editBtn.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    Intent newActivity = new Intent(androidActivity, NewActivity.class);
+                    newActivity.putExtra("activityName", current);
+                    androidActivity.startActivity(newActivity);
                 }
             });
         }
@@ -76,6 +94,9 @@ public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActi
                 holder.activityNameTV.setText("No Activities");
             }
     }
+
+    public Activity androidActivity;
+    public void setAndroidActivity(Activity newAndroidActivity){ androidActivity = newAndroidActivity;}
 
     void setActivityNames(List<String> newActivityNames)
     {
