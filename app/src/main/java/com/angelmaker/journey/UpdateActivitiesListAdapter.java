@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.angelmaker.journeyDatabase.ActivityInstance;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -52,6 +53,7 @@ public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActi
         inflater = LayoutInflater.from(context);
     }
 
+
     public void setViewModel(ActivityViewModel newActivityViewModel)
     {
         activityViewModel = newActivityViewModel;
@@ -71,6 +73,7 @@ public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActi
             final String current = activityNames.get(position);
             holder.activityNameTV.setText(current);
 
+            //Delete button
             holder.removeBtn.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -84,6 +87,7 @@ public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActi
                             .setMessage("Once an activity is deleted it cannot be recovered.\n\nDo you want to proceed?")
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
+                                    deleteAcitivityFolder(current);
                                     activityViewModel.deleteFullActivity(current);
                                 }
                             })
@@ -96,6 +100,7 @@ public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActi
                 }
             });
 
+            //Edit button
             holder.editBtn.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -114,6 +119,14 @@ public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActi
                 holder.activityNameTV.setText("No Activities");
             }
     }
+
+    private void deleteAcitivityFolder(String activityName){
+        File folder = new File("data/data/com.angelmaker.journey/linked_files/" + activityName);
+        boolean success = folder.delete();
+        if (!success) {Log.i("zzz", "Folder could not be deleted");}
+    }
+
+
 
     public Activity androidActivity;
     public void setAndroidActivity(Activity newAndroidActivity){ androidActivity = newAndroidActivity;}

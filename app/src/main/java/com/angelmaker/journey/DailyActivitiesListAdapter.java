@@ -192,7 +192,6 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
         // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
         // browser.
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        //Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 
         // Filter to only show results that can be "opened", such as a
         // file (as opposed to a list of contacts or timezones)
@@ -202,99 +201,26 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
         // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
         // To search for all documents available via installed storage providers,
         // it would be "*/*".
-        intent.setType("image/*");
-
-        Log.i("zzz", "androidActivity start");
+        intent.setType("*/*");
         androidActivity.startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
 
 
+    public String getFileName(Uri uri)
+    {
+        String fileName = "FileNameError";
+        Cursor cursor = androidActivity.getContentResolver()
+                .query(uri, null, null, null, null, null);
 
-
-
-    public String getFileName(Uri uri) {
-        String result = null;
-        if (uri.getScheme().equals("content")) {
-            Cursor cursor = androidActivity.getContentResolver().query(uri, null, null, null, null);
-            try {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                }
-            } finally {
-                cursor.close();
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                fileName = cursor.getString(
+                        cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
             }
         }
-
-        //If no name is returned, return last part of URI
-        if (result == null) {
-            result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-            }
-        }
-        return result;
+        finally { cursor.close(); }
+        return fileName;
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-                        Code to ask permissions
-                        Originally believed to be needed to open files but turned out to be unnecessary
-                        Leaving code here in the event it is needed for further file manipulation
-
-                        if (ContextCompat.checkSelfPermission(androidActivity.getApplicationContext(),
-                                Manifest.permission.READ_EXTERNAL_STORAGE)
-                                != PackageManager.PERMISSION_GRANTED)
-                        {
-                            // Permission is not granted
-                            // Should we show an explanation?
-                            if (ActivityCompat.shouldShowRequestPermissionRationale(androidActivity,
-                                    Manifest.permission.READ_EXTERNAL_STORAGE))
-                            {
-                                // Show an explanation to the user
-                                Toast.makeText(androidActivity, "Permission needed to open your attached file", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                // No explanation needed; request the permission
-                                ActivityCompat.requestPermissions(androidActivity,
-                                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                        PERMISSIONS_REQUEST_MANAGE_DOCUMENTS);
-                            }
-                        }
-
-                        else {
-                            Intent openFile = new Intent();
-                            openFile.setAction(Intent.ACTION_VIEW);
-                            Uri uri = Uri.parse(current.getAssociatedFile());
-                            openFile.setData(uri);
-                            openFile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            androidActivity.startActivity(openFile);
-                        }*/

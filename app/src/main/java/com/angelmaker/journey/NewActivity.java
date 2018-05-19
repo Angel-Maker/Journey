@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.angelmaker.journeyDatabase.ActivityInstance;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -114,6 +116,7 @@ public class NewActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     if(validInput())
                     {
+                        createFileFolder(activityNameET.getText().toString());
                         newActivities(startDate, endDate);
                         finish();
                     }
@@ -121,6 +124,28 @@ public class NewActivity extends AppCompatActivity {
             });
         }
     }
+
+
+    //Creates folder for a specific activity
+    private void createFileFolder(String activityName){
+        File folder = new File(getApplicationContext().getFilesDir()+ "/linked_files/" + activityName);
+        boolean success = true;
+
+        if (!folder.exists()) { success = folder.mkdir(); }
+        if (!success) {Log.i("zzz", "File could not be created");}
+    }
+
+    //Changes folder name for an activity
+    private void updateFolderName(String oldName, String newName){
+        File oldFolder = new File(getApplicationContext().getFilesDir()+ "/linked_files/" + oldName);
+        File newFolder = new File(getApplicationContext().getFilesDir()+ "/linked_files/" + newName);
+        boolean success = true;
+
+        if (oldFolder.exists()) { success = oldFolder.renameTo(newFolder); }
+        else {Log.i("zzz", "File to be updated does not exist");}
+        if (!success) {Log.i("zzz", "File could not be updated");}
+    }
+
 
 
 
@@ -182,7 +207,7 @@ public class NewActivity extends AppCompatActivity {
         return valid;
     }
 
-
+    //Creates new activities between two dates
     private void newActivities(Date fromDate, Date toDate)
     {
         //Activity initialization variables
@@ -246,13 +271,16 @@ public class NewActivity extends AppCompatActivity {
 
             String newName = activityNameET.getText().toString();
             String newDescription = descriptionET.getText().toString();
-            String newStartDate = sdfDB.format(startDate);
-            String newEndDate = sdfDB.format(endDate);
+            String newStartDateString = sdfDB.format(startDate);
+            String newEndDateString = sdfDB.format(endDate);
             //startDate (initialized elsewhere) contains the new start date in a Date variable
             //endDate (initialized elsewhere) contains the new end date in a Date variable
 
             //If any attributes have changed, delete, create, and update entries as needed.
-            if(!oldName.equals(newName) || !oldDescription.equals(newDescription) || !newStartDate.equals(oldStartDateString) || !newEndDate.equals(oldEndDateString))
+            if(!oldName.equals(newName) ||
+                    !oldDescription.equals(newDescription) ||
+                    !newStartDateString.equals(oldStartDateString) ||
+                    !newEndDateString.equals(oldEndDateString))
             {
                 List<ActivityInstance> activitiesToDelete = new ArrayList<ActivityInstance>();
                 List<ActivityInstance> activitiesToAdd = new ArrayList<ActivityInstance>();
@@ -266,6 +294,9 @@ public class NewActivity extends AppCompatActivity {
                 //If end date has been moved forward then add new entries as needed
                 if (endDate.after(oldEndDate)) { newEndDateActivities(oldEndDate); }
 
+                if(!oldName.equals(newName)){
+                    updateFolderName(oldName, newName);
+                }
 
                 //Change existing activities
                 for (int i = 0; i < fullActivity.size(); i++)
@@ -283,11 +314,10 @@ public class NewActivity extends AppCompatActivity {
                     else {
                         activity.setActivityName(newName);
                         activity.setActivityDescription(newDescription);
-                        activity.setStartDate(newStartDate);
-                        activity.setEndDate(newEndDate);
+                        activity.setStartDate(newStartDateString);
+                        activity.setEndDate(newEndDateString);
 
                         activitiesToUpdate.add(activity);               //Add activity to be updated in DB
-                        //activityViewModel.update(activity);             //Temp update solution
                     }
                 }
 
