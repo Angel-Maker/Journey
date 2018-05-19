@@ -287,12 +287,12 @@ public class NewActivity extends AppCompatActivity {
                         activity.setEndDate(newEndDate);
 
                         activitiesToUpdate.add(activity);               //Add activity to be updated in DB
-                        activityViewModel.update(activity);             //Temp update solution
+                        //activityViewModel.update(activity);             //Temp update solution
                     }
                 }
 
                 if (activitiesToDelete.size() != 0) { activityViewModel.deleteMany(activitiesToDelete); }
-                //if(activitiesToUpdate.size() != 0){activityViewModel.updateMany(activitiesToUpdate);}
+                if (activitiesToUpdate.size() != 0){ activityViewModel.updateMany(activitiesToUpdate);}
                 if (activitiesToAdd.size() != 0) { activityViewModel.insertMany(activitiesToAdd); }
 
                 newActivityInstance.finish();

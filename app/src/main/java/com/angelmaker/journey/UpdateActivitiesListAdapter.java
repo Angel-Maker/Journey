@@ -2,8 +2,11 @@ package com.angelmaker.journey;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Image;
+import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.angelmaker.journeyDatabase.ActivityInstance;
 
@@ -23,7 +27,7 @@ import java.util.List;
 
 public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActivitiesListAdapter.ActivityViewHolder> {
 
-    private ActivityViewModel activityViewModel;    //Test
+    private ActivityViewModel activityViewModel;
 
     class ActivityViewHolder extends RecyclerView.ViewHolder
     {
@@ -72,7 +76,23 @@ public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActi
                 @Override
                 public void onClick(View view)
                 {
-                    activityViewModel.deleteFullActivity(current);
+                    AlertDialog.Builder builder;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { builder = new AlertDialog.Builder(androidActivity, android.R.style.Theme_Material_Dialog_Alert); }
+                    else { builder = new AlertDialog.Builder(androidActivity); }
+
+                    builder.setTitle("Activity deletion warning!")
+                            .setMessage("Once an activity is deleted it cannot be recovered.\n\nDo you want to proceed?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    activityViewModel.deleteFullActivity(current);
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
             });
 

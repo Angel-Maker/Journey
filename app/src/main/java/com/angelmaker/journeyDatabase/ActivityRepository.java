@@ -94,7 +94,7 @@ public class ActivityRepository {
 
     //Updates a list of activities with the same primary ID
     public void updateMany (List<ActivityInstance> activityInstances) {
-        new deleteManyAsyncTask(activityDao).execute(activityInstances);
+        new updateManyAsyncTask(activityDao).execute(activityInstances);
     }
 
     private static class updateManyAsyncTask extends AsyncTask<List<ActivityInstance>, Void, Void> {
