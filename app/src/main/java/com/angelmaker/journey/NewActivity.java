@@ -39,6 +39,8 @@ public class NewActivity extends AppCompatActivity {
 
     private Date startDate = null;
     private Date endDate = null;
+    private Date oldStartDate = null;
+    private Date oldEndDate = null;
 
     private SimpleDateFormat sdfDB = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
 
@@ -70,8 +72,36 @@ public class NewActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if(validInput()){
-                        new updateActivityBtnClick().execute(activityName);
-                        Toast.makeText(getApplicationContext(), "Activity updated", Toast.LENGTH_LONG).show();
+
+                        //Warn user and allow back-out if days will be deleted and will result in data loss
+                        if (startDate.after(oldStartDate) || oldEndDate.after(endDate))
+                        {
+                            AlertDialog.Builder builder;
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { builder = new AlertDialog.Builder(newActivityInstance, android.R.style.Theme_Material_Dialog_Alert); }
+                            else { builder = new AlertDialog.Builder(newActivityInstance); }
+
+                            builder.setTitle("Entry deletion warning!")
+                                    .setMessage("You have changed the start or end date such that some activity records are no longer in your date range and will be deleted.\n\nDo you want to proceed?")
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            new updateActivityBtnClick().execute(activityName);
+                                            Toast.makeText(getApplicationContext(), "Activity updated", Toast.LENGTH_LONG).show();
+                                        }
+                                    })
+                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+
+                        }
+
+                        else{
+                            new updateActivityBtnClick().execute(activityName);
+                            Toast.makeText(getApplicationContext(), "Activity updated", Toast.LENGTH_LONG).show();
+                        }
+
                     }
                 }
             });
@@ -200,56 +230,26 @@ public class NewActivity extends AppCompatActivity {
 
 
     private class updateActivityBtnClick extends AsyncTask<String, Void, Void> {
-
-
         @Override
         protected Void doInBackground(final String... lists)
         {
             List<ActivityInstance> fullActivity = activityViewModel.getFullActivity(lists[0]);
             ActivityInstance activity = fullActivity.get(0);
 
-            String newName = activityNameET.getText().toString();
-            String newDescription = descriptionET.getText().toString();
-            String newStartDate = sdfDB.format(startDate); //startDate contains the new start date in a Date variable
-            String newEndDate = sdfDB.format(endDate);//endDate contains the new end date in a Date variable
-
             String oldName = activity.getActivityName();
             String oldDescription = activity.getActivityDescription();
             String oldStartDateString = activity.getStartDate();
             String oldEndDateString = activity.getEndDate();
-            Date oldStartDate = null;
-            Date oldEndDate = null;
-            try {
-                oldStartDate = sdfDB.parse(activity.getStartDate());
-                oldEndDate = sdfDB.parse(activity.getEndDate());
-            }
-            catch (ParseException e) { e.printStackTrace(); }
-
-/*
-            //Warn user and allow back-out if days will be deleted and will result in data loss
-            if (startDate.after(oldStartDate) || oldEndDate.after(endDate))
-            {
-                AlertDialog.Builder builder;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { builder = new AlertDialog.Builder(newActivityInstance, android.R.style.Theme_Material_Dialog_Alert); }
-                else { builder = new AlertDialog.Builder(newActivityInstance); }
-
-                builder.setTitle("Delete entries")
-                        .setMessage("Warning!\nYou have changed the start or end date such that some activity records are no longer in your date range and will be deleted\nAre you want to proceed?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-
-            }
+            // oldStartDate (initialized elsewhere) contains the old start date in a Date variable
+            // oldEndDate (initialized elsewhere) contains the old end date in a Date variable
 
 
-*/
+            String newName = activityNameET.getText().toString();
+            String newDescription = descriptionET.getText().toString();
+            String newStartDate = sdfDB.format(startDate);
+            String newEndDate = sdfDB.format(endDate);
+            //startDate (initialized elsewhere) contains the new start date in a Date variable
+            //endDate (initialized elsewhere) contains the new end date in a Date variable
 
             //If any attributes have changed, delete, create, and update entries as needed.
             if(!oldName.equals(newName) || !oldDescription.equals(newDescription) || !newStartDate.equals(oldStartDateString) || !newEndDate.equals(oldEndDateString))
@@ -300,8 +300,6 @@ public class NewActivity extends AppCompatActivity {
             return null;
         }
 
-        private void updateActivities(){}
-
 
         //Creates activities for changes in the start date
         private void newStartDateActivities(Date oldStartDate){
@@ -339,21 +337,7 @@ public class NewActivity extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    //Initialize fields to previous entries
     private class initializeFields extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(final String... lists) {
@@ -364,6 +348,12 @@ public class NewActivity extends AppCompatActivity {
             startDateTV.setText(activity.getStartDate());
             endDateTV.setText(activity.getEndDate());
             descriptionET.setText(activity.getActivityDescription());
+
+            try {
+                oldStartDate = sdfDB.parse(activity.getStartDate());
+                oldEndDate = sdfDB.parse(activity.getEndDate());
+            }
+            catch (ParseException e) { e.printStackTrace(); }
             return null;
         }
     }
