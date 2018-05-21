@@ -321,7 +321,7 @@ public class NewActivity extends AppCompatActivity {
                     }
                 }
 
-                if (activitiesToDelete.size() != 0) { activityViewModel.deleteMany(activitiesToDelete); }
+                if (activitiesToDelete.size() != 0) { activityViewModel.deleteMany(activitiesToDelete, getApplicationContext()); }
                 if (activitiesToUpdate.size() != 0){ activityViewModel.updateMany(activitiesToUpdate);}
                 if (activitiesToAdd.size() != 0) { activityViewModel.insertMany(activitiesToAdd); }
 

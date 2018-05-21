@@ -87,7 +87,7 @@ public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActi
                             .setMessage("Once an activity is deleted it cannot be recovered.\n\nDo you want to proceed?")
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    deleteAcitivityFolder(current);
+                                    deleteActivityFolder(current);
                                     activityViewModel.deleteFullActivity(current);
                                 }
                             })
@@ -120,12 +120,20 @@ public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActi
             }
     }
 
-    private void deleteAcitivityFolder(String activityName){
-        File folder = new File("data/data/com.angelmaker.journey/linked_files/" + activityName);
-        boolean success = folder.delete();
-        if (!success) {Log.i("zzz", "Folder could not be deleted");}
+    private void deleteActivityFolder(String activityName){
+        File folder = new File(androidActivity.getApplicationContext().getFilesDir() + "/linked_files/" + activityName);
+        deleteRecursive(folder);
     }
 
+    void deleteRecursive(File fileOrDirectory) {
+
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                deleteRecursive(child);
+
+        fileOrDirectory.delete();
+
+    }
 
 
     public Activity androidActivity;

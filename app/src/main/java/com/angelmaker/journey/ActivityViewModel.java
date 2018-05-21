@@ -3,6 +3,8 @@ package com.angelmaker.journey;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.content.Context;
+import android.net.Uri;
 
 import com.angelmaker.journeyDatabase.ActivityInstance;
 import com.angelmaker.journeyDatabase.ActivityRepository;
@@ -45,7 +47,20 @@ public class ActivityViewModel extends AndroidViewModel{
     public void insertMany(List<ActivityInstance> activityInstances) {repository.insertMany(activityInstances);}
     public void update (ActivityInstance activityInstance) {repository.update(activityInstance);}
     public void updateMany(List<ActivityInstance> activityInstances) {repository.updateMany(activityInstances);}
-    public void deleteMany(List<ActivityInstance> activityInstances) {repository.deleteMany(activityInstances);}
     public void deleteFullActivity(String removeActivityName) {repository.deleteFullActivity(removeActivityName); }
+    public void deleteMany(List<ActivityInstance> activityInstances, Context context) {
+        //Get file URI for each entry and delete the file if it exists
+        for(int i = 0; i < activityInstances.size() ; i++){
+            ActivityInstance activity = activityInstances.get(i);
+            if(activity.getAssociatedFile() != null) {
+                Uri uri = Uri.parse(activity.getAssociatedFile());
+                context.getContentResolver().delete(uri, null, null);
+            }
+        }
+
+        repository.deleteMany(activityInstances);
+    }
+
+
 }
 

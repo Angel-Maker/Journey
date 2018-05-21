@@ -107,7 +107,9 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
             });
 
 
-            if (current.getAssociatedFile() != null) {holder.fileTV.setText(getFileName(Uri.parse(current.getAssociatedFile())));}
+            if (current.getAssociatedFile() != null) {holder.fileTV.setText(getFileName(Uri.parse(current.getAssociatedFile())));
+                Log.i("zzz", "Text View set to: " + holder.fileTV.getText());
+            }
             else{holder.fileTV.setText("Select a file to attach");}
 
             //Setup file selector TextView
@@ -140,12 +142,14 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
                 @Override
                 public void onClick(View view)
                 {
-                    current.setAssociatedFile(null);
+                    if(current.getAssociatedFile() != null) {
+                        Uri uri = Uri.parse(current.getAssociatedFile());
+                        androidActivity.getApplicationContext().getContentResolver().delete(uri, null, null);
+                        current.setAssociatedFile(null);
+                    }
                     activityViewModel.update(current);
                 }
             });
-
-
         }
 
         else
@@ -215,11 +219,14 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
 
         try {
             if (cursor != null && cursor.moveToFirst()) {
+                Log.i("zzz", "Retrieving string");
                 fileName = cursor.getString(
                         cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
             }
         }
-        finally { cursor.close(); }
+        finally { if(cursor != null){cursor.close();} }
+
+        Log.i("zzz", "Returning: " + fileName);
         return fileName;
     }
 }
