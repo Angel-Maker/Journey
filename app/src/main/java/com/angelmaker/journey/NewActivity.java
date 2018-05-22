@@ -116,9 +116,18 @@ public class NewActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     if(validInput())
                     {
-                        createFileFolder(activityNameET.getText().toString());
-                        newActivities(startDate, endDate);
-                        finish();
+                        Boolean folderCreated = createFileFolder(activityNameET.getText().toString());
+
+                        if(folderCreated) {
+                            newActivities(startDate, endDate);
+                            finish();
+                        }
+
+                        else{
+                            Toast.makeText(getApplicationContext(),
+                                    "---This activity already exists---\nUse the previous page if you would like to edit it.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             });
@@ -126,13 +135,14 @@ public class NewActivity extends AppCompatActivity {
     }
 
 
+
     //Creates folder for a specific activity
-    private void createFileFolder(String activityName){
+    private boolean createFileFolder(String activityName){
         File folder = new File(getApplicationContext().getFilesDir()+ "/linked_files/" + activityName);
-        boolean success = true;
+        boolean success = false;
 
         if (!folder.exists()) { success = folder.mkdir(); }
-        if (!success) {Log.i("zzz", "File could not be created");}
+        return success;
     }
 
     //Changes folder name for an activity

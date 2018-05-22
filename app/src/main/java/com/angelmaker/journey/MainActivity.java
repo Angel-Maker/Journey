@@ -1,6 +1,3 @@
-//todo - Update delete functions to remove file before deleting DB entries
-
-//todo - Prevent duplicate activities from being added
 //todo - Add description text to DailyActivity view area
 
 //todo - Add front screen help message if no activities have been added

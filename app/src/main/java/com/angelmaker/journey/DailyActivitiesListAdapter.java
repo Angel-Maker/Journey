@@ -1,6 +1,7 @@
 package com.angelmaker.journey;
 
 import android.app.Activity;
+import android.app.ExpandableListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,21 +14,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.angelmaker.journeyDatabase.ActivityInstance;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by AngelPlayer on 5/8/2018.
  */
 
+
 public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivitiesListAdapter.ActivityViewHolder> {
 
-    private final int PERMISSIONS_REQUEST_MANAGE_DOCUMENTS = 2048;
-
     private ActivityViewModel activityViewModel;
+
+    private ExpandableListView expListView;
+    private ExpandableListAdapter listAdapter;
+    List<String> listDataHeader;
+    HashMap<String, List<String>> listDataChild;
+
 
     class ActivityViewHolder extends RecyclerView.ViewHolder
     {
@@ -43,8 +54,57 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
             starCB = itemView.findViewById(R.id.starCB);
             fileTV = itemView.findViewById(R.id.fileTV);
             removeFileBtn = itemView.findViewById(R.id.removeFileBtn);
+
+            expListView = itemView.findViewById(R.id.descriptionETV);
         }
     }
+
+
+    private void prepareListData(String activityDescription) {
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
+
+        // Adding header data
+        listDataHeader.add("Description");
+
+        // Adding child data
+        List<String> description = new ArrayList<>();
+
+        if(activityDescription != null && !activityDescription.equals("")){description.add(activityDescription);}
+        else{description.add("-----No description entered-----\nUse the update activities' edit button to add one!");}
+
+
+        listDataChild.put(listDataHeader.get(0), description);
+    }
+
+
+    public void setupExpandableView() {
+        listAdapter = new DailyActivitiesExpandableListAdapter(androidActivity.getApplicationContext(), listDataHeader, listDataChild);
+        expListView.setAdapter(listAdapter);
+        final float scale = androidActivity.getApplicationContext().getResources().getDisplayMetrics().density; //Convert pixel to dp:  (int)(dps * scale + 0.5f);
+
+        final ViewGroup.LayoutParams lp = expListView.getLayoutParams();
+
+        //Increase view area when clicking on description
+        expListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                lp.height = (int)(50 * scale + 0.5f);
+            }
+        });
+
+        //Decrease view area when collapsing on description
+        expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+
+            @Override
+            public void onGroupCollapse(int groupPosition) {
+                lp.height = (int)(13 * scale + 0.5f);
+            }
+        });
+    }
+
+
 
     private final LayoutInflater inflater;
     private List<ActivityInstance> activities; // Cached copy of words
@@ -73,6 +133,9 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
         if (activities != null)
         {
             final ActivityInstance current = activities.get(position);
+
+            prepareListData(current.getActivityDescription());
+            setupExpandableView();
 
             //Setup completion checkbox
             holder.completionCB.setText(current.getActivityName());

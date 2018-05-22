@@ -31,8 +31,15 @@
             android:gravity="center" />
 
 
-
     </LinearLayout>
+
+    <ExpandableListView
+        android:id="@+id/descriptionETV"
+
+        android:layout_width="match_parent"
+        android:layout_height="13dp"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false" />
 
     <LinearLayout
         android:layout_width="match_parent"

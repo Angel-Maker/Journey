@@ -65,6 +65,7 @@ public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActi
         return new ActivityViewHolder(itemView);
     }
 
+
     @Override
     public void onBindViewHolder(ActivityViewHolder holder, int position)
     {
