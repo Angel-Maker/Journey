@@ -20,17 +20,20 @@ import static android.arch.persistence.room.OnConflictStrategy.IGNORE;
 
 @Dao
 public interface ActivityDao {
-
     //Find all unique activity category names
     @Query ("SELECT DISTINCT activityName FROM activities_table")
     LiveData<List<String>> getUniqueActivityNames();
+
+    //Find all unique activity category names
+    @Query ("SELECT DISTINCT activityName FROM activities_table")
+    List<String> checkIfEmpty();
 
     //Finds all unique days that have a star on it
     @Query ("SELECT DISTINCT currentDate FROM activities_table WHERE starred = 1")
     LiveData<List<String>> getUniqueStarred();
 
     //Adds a list of activities
-    @Insert                      //Todo - need conflict resolution as the id will be the diff even if name is the same
+    @Insert
     void insertMany(List<ActivityInstance> activityInstanceList);
 
     //Remove all instances of one activity category
@@ -49,34 +52,16 @@ public interface ActivityDao {
     @Query ("Select * from activities_table WHERE activityName = :getActivityName")
     List<ActivityInstance> getFullActivity(String getActivityName);
 
+    //Find all activities for a day
+    @Query ("SELECT * from activities_table WHERE currentDate = :getActivityDate")
+    LiveData<List<ActivityInstance>> getDailyActivities(String getActivityDate);
 
     //Find all activities for a specific day
     @Query ("SELECT * from activities_table WHERE currentDate = :getActivityDate")
-    LiveData<List<ActivityInstance>> getDailyActivities(String getActivityDate);
+    List<ActivityInstance> getSpecifiedDailyActivities(String getActivityDate);
 
     //Updates a single entry
     @Update
     void update(ActivityInstance activityInstance);
 }
 
-
-//----UpdateActivity----
-//Adds a list of activities --> list is created recursively before being entered into DB
-//Find all unique activity categories names(to populate lists)
-//Remove all instances of one activity category
-//Edit one androidActivity category  (Remove any androidActivity instances not in new date range, Insert activities to fill new date range, modify all others)
-
-//----Daily activity----
-//Find all activities for a specific day (to populate lists)
-//Edit one activity entry
-//Get one activity category  (Used to build slideshow when done)
-
-
-/*
-Should not be needed
-    //Get a single entry (used to find corresponding unique ID for updating)
-    @Query ("SELECT * from activities_table " +
-            "WHERE activityName = :getActivityName AND " +
-            "currentDate = :getActivityDate")
-    ActivityInstance getActivity(String getActivityName, Calendar getActivityDate);
- */

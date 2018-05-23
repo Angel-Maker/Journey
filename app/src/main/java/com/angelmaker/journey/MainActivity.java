@@ -1,21 +1,21 @@
-//todo - Add description text to DailyActivity view area
-
 //todo - Add front screen help message if no activities have been added
-//todo - Update main menu button to include number of activities done for that day
+//todo - Update button that leads to daily activities to include number of activities done for that day
+//todo - Update button to become gold if the day has a star on it
 //todo - Track down reason for multiple dot icons in calendar after activity edits
 
 //todo - Add "About App" menu item with info on app and contact information
 
 //todo - Create "Journey View" that show progress over the time period
 
-//todo - Clean up code base
-//todo - Distribute beta test copies to friends for 7 days
+//todo - Clean up code0
+//todo - Distribute beta test copies
 //todo - Publish app
 
 
 package com.angelmaker.journey;
 
 import android.app.Activity;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
     private Button dailyActivityBtn;
     private CompactCalendarView compactCalendar;
     private TextView timeWindowTV;
+    private ActivityViewModel activityViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mainMenuToolbar);
 
         selectedDate = Calendar.getInstance();
+        activityViewModel = new ActivityViewModel(getApplication());
 
         dailyActivityBtn = findViewById(R.id.dailyActivityBtn);
         dailyActivityBtn.setText(sdfDB.format(selectedDate.getTime()));
@@ -95,8 +98,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDayClick(Date dateClicked) {
                 selectedDate.setTime(dateClicked);
-                String sdfDateClicked = sdfDB.format(dateClicked);
-                dailyActivityBtn.setText(sdfDateClicked);
+                new updateButtonText().execute();
             }
 
             @Override
@@ -104,7 +106,25 @@ public class MainActivity extends AppCompatActivity {
                 timeWindowTV.setText(sdfCalendarTitle.format(firstDayOfNewMonth));
             }
         });
+
+        new updateButtonText().execute();
+
+        startNoticeText();
     }
+
+
+
+    private void startNoticeText(){
+        //Link view model to database
+        activityViewModel.getActivityNames().observe(this, new Observer<List<String>>() {
+            @Override
+            public void onChanged(@Nullable final List<String> activities) {
+                //Executed whenever the observed object changes
+                if(activities.size() == 0){Log.i("zzz","No activities to display");}   // Update the cached copy of the words in the adapter.
+            }
+        });
+    }
+
 
 
     //Creates the folder that stores linked files
@@ -168,5 +188,49 @@ public class MainActivity extends AppCompatActivity {
 
         startActivity(dailyActivities);
     }
+
+
+    //Sets button text to selected date and number of completed activities
+    private class updateButtonText extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(final String... lists) {
+            Log.i("zzz", "Change in DailyActivities");
+
+            List<ActivityInstance> activities = activityViewModel.getSpecifiedDailyActivities(sdfDB.format(selectedDate.getTime()));
+
+            //Executed whenever the observed object changes
+            int completedActivities = 0;
+            Boolean stared = false;
+            ActivityInstance activity;
+
+
+            //Check each activity and tally the number of completed activities
+            for(int i = 0 ; i < activities.size() ; i++){
+                activity = activities.get(i);
+                if(activity.getCompleted()){ completedActivities++; }
+                if(activity.getStar()){stared = true;}
+            }
+
+            String selectedDateString = sdfDB.format(selectedDate.getTime());
+            String displayText = selectedDateString + "\nCompleated: " + completedActivities + "/" + activities.size();
+            dailyActivityBtn.setText(displayText);
+
+            if(stared){dailyActivityBtn.setBackgroundColor(0xFFFFDF00);}    // 0xAARRGGBB    "Golden Yellow"
+            else{dailyActivityBtn.setBackgroundColor(0xFFC0C0C0);}          // 0xAARRGGBB    "Silver"
+
+
+            return null;
+        }
+    }
+
+/*
+    //Initialize fields to previous entries
+    private class setTopText extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(final String... lists) {
+            Boolean
+            return null;
+        }
+    }*/
 }
 

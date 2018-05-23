@@ -173,6 +173,10 @@ public class DailyActivities extends AppCompatActivity {
      * Fires an intent to spin up the "file chooser" UI and select an image.
      */
 
+
+    private Uri targatedUri;
+    private Uri newLocationUri;
+
     @Override
     public void onActivityResult(int requestCode, int resultCode,
                                  Intent resultData) {

@@ -46,7 +46,18 @@ public class ActivityRepository {
     }
 
 
+    public List<ActivityInstance> getSpecifiedDailyActivities(String specifiedDate) {
+        List<ActivityInstance> daysActivities = activityDao.getSpecifiedDailyActivities(specifiedDate);
+        return daysActivities;
+    }
 
+    //Returns if database is empty
+    public boolean checkIfEmpty(){
+        Boolean empty = true;
+        List<String> addedActivities = activityDao.checkIfEmpty();
+        if (addedActivities.size() != 0 ){empty = false;}
+        return empty;
+    }
 
 
     //Adds a list of activities
