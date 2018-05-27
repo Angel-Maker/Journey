@@ -1,4 +1,4 @@
-package com.angelmaker.journey;
+package com.angelmaker.journey.supportFiles;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
+
+import com.angelmaker.journey.R;
 
 import java.util.HashMap;
 import java.util.List;

@@ -51,13 +51,6 @@ public class ActivityRepository {
         return daysActivities;
     }
 
-    //Returns if database is empty
-    public boolean checkIfEmpty(){
-        Boolean empty = true;
-        List<String> addedActivities = activityDao.checkIfEmpty();
-        if (addedActivities.size() != 0 ){empty = false;}
-        return empty;
-    }
 
 
     //Adds a list of activities

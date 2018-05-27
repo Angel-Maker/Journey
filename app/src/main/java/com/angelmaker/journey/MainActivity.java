@@ -1,13 +1,10 @@
-//todo - Add front screen help message if no activities have been added
-//todo - Update button that leads to daily activities to include number of activities done for that day
-//todo - Update button to become gold if the day has a star on it
 //todo - Track down reason for multiple dot icons in calendar after activity edits
 
 //todo - Add "About App" menu item with info on app and contact information
 
 //todo - Create "Journey View" that show progress over the time period
 
-//todo - Clean up code0
+//todo - Clean up code
 //todo - Distribute beta test copies
 //todo - Publish app
 
@@ -66,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
     private CompactCalendarView compactCalendar;
     private TextView timeWindowTV;
     private ActivityViewModel activityViewModel;
+    private TextView noActivitiesTV;
+    private Button completedJourneyBtn;
 
 
     @Override
@@ -73,15 +72,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(!fileStorageFolderCreated){
-            createStorageFolder();
-        }
+        if(!fileStorageFolderCreated){ createStorageFolder(); }
+
+        noActivitiesTV = findViewById(R.id.noActivitiesTV);
+        completedJourneyBtn = findViewById(R.id.completedJourneyBtn);
 
         Toolbar mainMenuToolbar = findViewById(R.id.mainMenuToolbar);
         setSupportActionBar(mainMenuToolbar);
 
         selectedDate = Calendar.getInstance();
         activityViewModel = new ActivityViewModel(getApplication());
+
+        startNoticeBar();
 
         dailyActivityBtn = findViewById(R.id.dailyActivityBtn);
         dailyActivityBtn.setText(sdfDB.format(selectedDate.getTime()));
@@ -108,22 +110,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         new updateButtonText().execute();
-
-        startNoticeText();
     }
 
-
-
-    private void startNoticeText(){
-        //Link view model to database
-        activityViewModel.getActivityNames().observe(this, new Observer<List<String>>() {
-            @Override
-            public void onChanged(@Nullable final List<String> activities) {
-                //Executed whenever the observed object changes
-                if(activities.size() == 0){Log.i("zzz","No activities to display");}   // Update the cached copy of the words in the adapter.
-            }
-        });
-    }
 
 
 
@@ -137,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    //Calendar Settings
     private void markStarredDays(){
         ActivityViewModel activityViewModel = ViewModelProviders.of(this).get(ActivityViewModel.class);
 
@@ -145,7 +134,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable final List<String> starredDates) {
                 //Executed whenever the observed object changes
-                for(int i = 0; i < starredDates.size(); i++) { addEvent(starredDates.get(i)); }   // Update the cached copy of the words in the adapter.
+                compactCalendar.removeAllEvents();
+                for(int i = 0; i < starredDates.size(); i++) { addEvent(starredDates.get(i)); }
             }
         });
     }
@@ -175,11 +165,29 @@ public class MainActivity extends AppCompatActivity {
             Intent updateActivities = new Intent(this, UpdateActivities.class);
             startActivity(updateActivities);
         }
+        if(item.getItemId() == R.id.aboutAppMenuItem){
+            Intent aboutApp = new Intent(this, AboutApp.class);
+            startActivity(aboutApp);
+        }
         return super.onOptionsItemSelected(item);
     }
 
 
     //View Objects
+    private void startNoticeBar(){
+        //Link view model to database
+        activityViewModel.getActivityNames().observe(this, new Observer<List<String>>() {
+            @Override
+            public void onChanged(@Nullable final List<String> activities) {
+                //Set visibility of no activity help message
+                if(activities.size() == 0){noActivitiesTV.setVisibility(View.VISIBLE);}
+                else{noActivitiesTV.setVisibility(View.INVISIBLE);}
+
+
+            }
+        });
+    }
+
     public void dailyActivityBtn(View view) {
         Intent dailyActivities = new Intent(this, DailyActivities.class);
 
@@ -188,6 +196,8 @@ public class MainActivity extends AppCompatActivity {
 
         startActivity(dailyActivities);
     }
+
+
 
 
     //Sets button text to selected date and number of completed activities
@@ -222,15 +232,5 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
-
-/*
-    //Initialize fields to previous entries
-    private class setTopText extends AsyncTask<String, Void, Void> {
-        @Override
-        protected Void doInBackground(final String... lists) {
-            Boolean
-            return null;
-        }
-    }*/
 }
 

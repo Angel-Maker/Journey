@@ -1,23 +1,22 @@
-package com.angelmaker.journey;
+package com.angelmaker.journey.supportFiles;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.angelmaker.journeyDatabase.ActivityInstance;
+import com.angelmaker.journey.ActivityViewModel;
+import com.angelmaker.journey.NewActivity;
+import com.angelmaker.journey.R;
 
 import java.io.File;
 import java.util.List;
@@ -48,7 +47,7 @@ public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActi
     private List<String> activityNames; // Cached copy of words
 
 
-    UpdateActivitiesListAdapter(Context context)
+    public UpdateActivitiesListAdapter(Context context)
     {
         inflater = LayoutInflater.from(context);
     }
@@ -140,7 +139,7 @@ public class UpdateActivitiesListAdapter extends RecyclerView.Adapter<UpdateActi
     public Activity androidActivity;
     public void setAndroidActivity(Activity newAndroidActivity){ androidActivity = newAndroidActivity;}
 
-    void setActivityNames(List<String> newActivityNames)
+    public void setActivityNames(List<String> newActivityNames)
     {
         activityNames = newActivityNames;
         notifyDataSetChanged();

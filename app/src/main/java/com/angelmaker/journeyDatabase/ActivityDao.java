@@ -7,11 +7,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-
-import java.util.Calendar;
 import java.util.List;
-
-import static android.arch.persistence.room.OnConflictStrategy.IGNORE;
 
 /**
  * Created by AngelPlayer on 5/3/2018.
@@ -23,10 +19,6 @@ public interface ActivityDao {
     //Find all unique activity category names
     @Query ("SELECT DISTINCT activityName FROM activities_table")
     LiveData<List<String>> getUniqueActivityNames();
-
-    //Find all unique activity category names
-    @Query ("SELECT DISTINCT activityName FROM activities_table")
-    List<String> checkIfEmpty();
 
     //Finds all unique days that have a star on it
     @Query ("SELECT DISTINCT currentDate FROM activities_table WHERE starred = 1")

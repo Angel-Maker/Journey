@@ -1,4 +1,4 @@
-package com.angelmaker.journey;
+package com.angelmaker.journey.supportFiles;
 
 
 import android.app.DatePickerDialog;

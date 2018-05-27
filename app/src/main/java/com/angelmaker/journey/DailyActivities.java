@@ -2,18 +2,9 @@ package com.angelmaker.journey;
 
 
 import android.app.Activity;
-import android.app.DownloadManager;
 import android.arch.lifecycle.Observer;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.provider.MediaStore;
-import android.provider.OpenableColumns;
-import android.provider.UserDictionary;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.GestureDetectorCompat;
@@ -27,17 +18,15 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.widget.ImageView;
 
+import com.angelmaker.journey.supportFiles.DailyActivitiesListAdapter;
 import com.angelmaker.journeyDatabase.ActivityInstance;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;

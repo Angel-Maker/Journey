@@ -1,7 +1,6 @@
-package com.angelmaker.journey;
+package com.angelmaker.journey.supportFiles;
 
 import android.app.Activity;
-import android.app.ExpandableListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,8 +16,9 @@ import android.widget.CheckBox;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.angelmaker.journey.ActivityViewModel;
+import com.angelmaker.journey.R;
 import com.angelmaker.journeyDatabase.ActivityInstance;
 
 import java.util.ArrayList;
@@ -109,7 +109,7 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
     private final LayoutInflater inflater;
     private List<ActivityInstance> activities; // Cached copy of words
 
-    DailyActivitiesListAdapter(Context context)
+    public DailyActivitiesListAdapter(Context context)
     {
         inflater = LayoutInflater.from(context);
     }
@@ -223,7 +223,7 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
     }
 
 
-    void setActivities(List<ActivityInstance> newActivities)
+    public void setActivities(List<ActivityInstance> newActivities)
     {
         activities = newActivities;
         notifyDataSetChanged();

@@ -4,7 +4,13 @@
 
     <item
         android:id="@+id/updateActivitiesMenuItem"
-        android:title="Update Activities"
+        android:title="@string/menu_action_update_activities"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/aboutAppMenuItem"
+        android:title="@string/menu_action_about_app"
+        app:showAsAction="never" />
+
 
 </menu>

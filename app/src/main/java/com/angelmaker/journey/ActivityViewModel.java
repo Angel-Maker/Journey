@@ -46,7 +46,6 @@ public class ActivityViewModel extends AndroidViewModel{
 
     public List<ActivityInstance> getFullActivity(String getActivityName) { return repository.getFullActivity(getActivityName); }
     public List<ActivityInstance> getSpecifiedDailyActivities(String specifiedDate) { return repository.getSpecifiedDailyActivities(specifiedDate); }
-    public Boolean checkIfEmpty(){return repository.checkIfEmpty();}
     public void insertMany(List<ActivityInstance> activityInstances) {repository.insertMany(activityInstances);}
     public void update (ActivityInstance activityInstance) {repository.update(activityInstance);}
     public void updateMany(List<ActivityInstance> activityInstances) {repository.updateMany(activityInstances);}
