@@ -14,8 +14,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.angelmaker.journey.ActivityViewModel;
-import com.angelmaker.journey.NewActivity;
+import com.angelmaker.journey.Activities.ActivityViewModel;
+import com.angelmaker.journey.Activities.NewActivity;
 import com.angelmaker.journey.R;
 
 import java.io.File;

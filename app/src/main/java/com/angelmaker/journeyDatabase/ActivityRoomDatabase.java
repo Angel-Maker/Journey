@@ -10,14 +10,14 @@ import android.content.Context;
  * Created by AngelPlayer on 5/3/2018.
  */
 
-@Database(entities = {ActivityInstance.class}, version = 4, exportSchema = false)
+@Database(entities = {ActivityInstance.class, ActivityType.class}, version = 5, exportSchema = false)
 public abstract class ActivityRoomDatabase extends RoomDatabase {
 
     public abstract ActivityDao activityDao();
 
     private static ActivityRoomDatabase INSTANCE;
 
-    static ActivityRoomDatabase getDatabase(final Context context){
+    public static ActivityRoomDatabase getDatabase(final Context context){
         if (INSTANCE == null) {
             synchronized (ActivityRoomDatabase.class) {
                 if (INSTANCE == null) {

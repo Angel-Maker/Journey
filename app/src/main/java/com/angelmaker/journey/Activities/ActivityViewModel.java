@@ -1,16 +1,15 @@
-package com.angelmaker.journey;
+package com.angelmaker.journey.Activities;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 import com.angelmaker.journeyDatabase.ActivityInstance;
-import com.angelmaker.journeyDatabase.ActivityRepository;
+import com.angelmaker.journey.supportFiles.ActivityRepository;
+import com.angelmaker.journeyDatabase.ActivityType;
 
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -24,7 +23,7 @@ public class ActivityViewModel extends AndroidViewModel{
     private LiveData<List<String>> uniqueStarred;
 
 
-
+    //Constructor for updateActivities recycler view
     public ActivityViewModel (Application application) {
         super(application);
         repository = new ActivityRepository(application);
@@ -32,6 +31,7 @@ public class ActivityViewModel extends AndroidViewModel{
         uniqueStarred = repository.getUniqueStarred();
     }
 
+    //Constructor for dailyActivities recycler view
     public ActivityViewModel (Application application, String viewedDate) {
         super(application);
         repository = new ActivityRepository(application, viewedDate);
@@ -39,18 +39,30 @@ public class ActivityViewModel extends AndroidViewModel{
     }
 
 
-    LiveData<List<String>> getUniqueStarred() {return uniqueStarred;}
+
+    //////////////////////////////////////////////////////////////////////////
+    ///////////////////////Commands for activity types////////////////////////
+    //////////////////////////////////////////////////////////////////////////
+
     LiveData<List<String>> getActivityNames() {return activityNames;}
+    public String getActivityDescription(String activityName) { return repository.getActivityDescription(activityName); }
+    public void deleteActivityType(String removeActivityName) {repository.deleteActivityType(removeActivityName); }
+    public void deleteActivityType(ActivityType activityType) {repository.deleteActivityType(activityType); }
+
+
+
+    //////////////////////////////////////////////////////////////////////////
+    ///////////////////////Commands for activity instances////////////////////
+    //////////////////////////////////////////////////////////////////////////
+
+    LiveData<List<String>> getUniqueStarred() {return uniqueStarred;}
     LiveData<List<ActivityInstance>> getDailyActivities() {return dailyActivities;}
-
-
-    public List<ActivityInstance> getFullActivity(String getActivityName) { return repository.getFullActivity(getActivityName); }
     public List<ActivityInstance> getSpecifiedDailyActivities(String specifiedDate) { return repository.getSpecifiedDailyActivities(specifiedDate); }
-    public void insertMany(List<ActivityInstance> activityInstances) {repository.insertMany(activityInstances);}
-    public void update (ActivityInstance activityInstance) {repository.update(activityInstance);}
-    public void updateMany(List<ActivityInstance> activityInstances) {repository.updateMany(activityInstances);}
-    public void deleteFullActivity(String removeActivityName) {repository.deleteFullActivity(removeActivityName); }
-    public void deleteMany(List<ActivityInstance> activityInstances, Context context) {
+    public void insertActivityInstances(List<ActivityInstance> activityInstances) {repository.insertActivityInstances(activityInstances);}
+    public void updateActivityInstance (ActivityInstance activityInstance) {repository.updateActivityInstance(activityInstance);}
+
+
+    public void deleteActivityInstances(List<ActivityInstance> activityInstances, Context context) {
         //Get file URI for each entry and delete the file if it exists
         for(int i = 0; i < activityInstances.size() ; i++){
             ActivityInstance activity = activityInstances.get(i);
@@ -60,7 +72,7 @@ public class ActivityViewModel extends AndroidViewModel{
             }
         }
 
-        repository.deleteMany(activityInstances);
+        repository.deleteActivityInstances(activityInstances);
     }
 
 

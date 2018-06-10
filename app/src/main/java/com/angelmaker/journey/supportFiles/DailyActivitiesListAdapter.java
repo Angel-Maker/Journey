@@ -17,9 +17,10 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import com.angelmaker.journey.ActivityViewModel;
+import com.angelmaker.journey.Activities.ActivityViewModel;
 import com.angelmaker.journey.R;
 import com.angelmaker.journeyDatabase.ActivityInstance;
+import com.angelmaker.journeyDatabase.ActivityType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -127,6 +128,7 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
         return new ActivityViewHolder(itemView);
     }
 
+
     @Override
     public void onBindViewHolder(final ActivityViewHolder holder, int position)
     {
@@ -134,11 +136,14 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
         {
             final ActivityInstance current = activities.get(position);
 
-            prepareListData(current.getActivityDescription());
+            //Setup Description
+            String activityName = current.getActivityInstanceName();
+
+            prepareListData(activityViewModel.getActivityDescription(activityName));
             setupExpandableView();
 
             //Setup completion checkbox
-            holder.completionCB.setText(current.getActivityName());
+            holder.completionCB.setText(current.getActivityInstanceName());
             if (current.getCompleted()) {holder.completionCB.setChecked(true);}
             else{holder.completionCB.setChecked(false);}
 

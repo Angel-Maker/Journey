@@ -1,4 +1,4 @@
-package com.angelmaker.journey;
+package com.angelmaker.journey.Activities;
 
 
 import android.app.Activity;
@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
+import com.angelmaker.journey.R;
 import com.angelmaker.journey.supportFiles.DailyActivitiesListAdapter;
 import com.angelmaker.journeyDatabase.ActivityInstance;
 
@@ -163,9 +164,7 @@ public class DailyActivities extends AppCompatActivity {
      */
 
 
-    private Uri targatedUri;
-    private Uri newLocationUri;
-
+    //Copies linked file to local storage
     @Override
     public void onActivityResult(int requestCode, int resultCode,
                                  Intent resultData) {
@@ -186,7 +185,7 @@ public class DailyActivities extends AppCompatActivity {
 
                 String shortName = adapter.getFileName(uri);
                 final String filepath = getApplicationContext().getFilesDir() + "/linked_files/"
-                        + changedActivity.getActivityName() + "/"
+                        + changedActivity.getActivityInstanceName() + "/"
                         + sdfFile.format(selectedDate.getTime()) + ": " + shortName;
 
                 File targetLocation = new File(filepath);

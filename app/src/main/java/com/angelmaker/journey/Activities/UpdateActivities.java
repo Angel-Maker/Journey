@@ -1,4 +1,4 @@
-package com.angelmaker.journey;
+package com.angelmaker.journey.Activities;
 
 import android.arch.lifecycle.Observer;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.angelmaker.journey.R;
 import com.angelmaker.journey.supportFiles.UpdateActivitiesListAdapter;
 
 import java.util.List;

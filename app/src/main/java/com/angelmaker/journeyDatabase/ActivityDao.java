@@ -16,44 +16,68 @@ import java.util.List;
 
 @Dao
 public interface ActivityDao {
-    //Find all unique activity category names
-    @Query ("SELECT DISTINCT activityName FROM activities_table")
-    LiveData<List<String>> getUniqueActivityNames();
+    //////////////////////////////////////////////////////////////////////////
+    ///////////////////////// Activity Type //////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////
 
-    //Finds all unique days that have a star on it
-    @Query ("SELECT DISTINCT currentDate FROM activities_table WHERE starred = 1")
-    LiveData<List<String>> getUniqueStarred();
+    //Adds a new type of activity
+    @Insert
+    void insertActivityType(ActivityType activityType);
+
+    //Updates an activity type
+    @Update
+    void updateActivityType(ActivityType activityType);
+
+    //Removes an activity using activity type
+    @Delete
+    void deleteActivityType(ActivityType activityType);
+
+    //Removes an activity using activity name
+    @Query ("DELETE from activity_types_table WHERE activityTypeName = :removeActivityName")
+    void deleteActivityType(String removeActivityName);
+
+    //Find all unique activity category names
+    @Query ("SELECT activityTypeName FROM activity_types_table")
+    LiveData<List<String>> getActivityTypeNames();
+
+    //Find description from an activity name
+    @Query ("SELECT activityDescription from activity_types_table WHERE activityTypeName = :activityName")
+    String getActivityTypeDescription(String activityName);
+
+    //Find description from an activity name
+    @Query ("SELECT activityTypeName AND endDate FROM activity_types_table")
+    List<String> getActivityTypeEndDate();
+
+
+
+
+
+    //////////////////////////////////////////////////////////////////////////
+    ///////////////////////// Activity Instance //////////////////////////////
+    //////////////////////////////////////////////////////////////////////////
 
     //Adds a list of activities
     @Insert
-    void insertMany(List<ActivityInstance> activityInstanceList);
-
-    //Remove all instances of one activity category
-    @Query ("DELETE from activities_table WHERE activityName = :removeActivityName")
-    void deleteFullActivity(String removeActivityName);
-
-    //Removes a list of activities
-    @Delete
-    void deleteMany(List<ActivityInstance> activityInstance);
-
-    //Updates a list of activities with the same primary ID
-    @Update
-    void updateMany(List<ActivityInstance> activityInstance);
-
-    //Returns all of a named activity (used to find corresponding unique ID for updating and Progression Reflection)
-    @Query ("Select * from activities_table WHERE activityName = :getActivityName")
-    List<ActivityInstance> getFullActivity(String getActivityName);
-
-    //Find all activities for a day
-    @Query ("SELECT * from activities_table WHERE currentDate = :getActivityDate")
-    LiveData<List<ActivityInstance>> getDailyActivities(String getActivityDate);
-
-    //Find all activities for a specific day
-    @Query ("SELECT * from activities_table WHERE currentDate = :getActivityDate")
-    List<ActivityInstance> getSpecifiedDailyActivities(String getActivityDate);
+    void insertActivityInstances(List<ActivityInstance> activityInstanceList);
 
     //Updates a single entry
     @Update
-    void update(ActivityInstance activityInstance);
+    void updateActivityInstance(ActivityInstance activityInstance);
+
+    //Removes a list of activities
+    @Delete
+    void deleteActivityInstances(List<ActivityInstance> activityInstance);
+
+    //Finds all unique days that have a star on it
+    @Query ("SELECT DISTINCT currentDate FROM activity_instance_table WHERE starred = 1")
+    LiveData<List<String>> getUniqueStarred();
+
+    //Find all activities for a day
+    @Query ("SELECT * from activity_instance_table WHERE currentDate = :getActivityDate")
+    LiveData<List<ActivityInstance>> getDailyActivities(String getActivityDate);
+
+    //Find all activities for a specific day
+    @Query ("SELECT * from activity_instance_table WHERE currentDate = :getActivityDate")
+    List<ActivityInstance> getSpecifiedDailyActivities(String getActivityDate);
 }
 

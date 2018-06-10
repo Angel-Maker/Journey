@@ -9,17 +9,13 @@
 //todo - Publish app
 
 
-package com.angelmaker.journey;
+package com.angelmaker.journey.Activities;
 
-import android.app.Activity;
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,16 +26,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.angelmaker.journey.ActivityViewModel;
-import com.angelmaker.journey.DailyActivities;
 import com.angelmaker.journey.R;
-import com.angelmaker.journey.UpdateActivities;
-import com.angelmaker.journeyDatabase.ActivityDao;
 import com.angelmaker.journeyDatabase.ActivityInstance;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;

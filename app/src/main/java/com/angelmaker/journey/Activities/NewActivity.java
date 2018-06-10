@@ -1,4 +1,4 @@
-package com.angelmaker.journey;
+package com.angelmaker.journey.Activities;
 
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.angelmaker.journey.R;
 import com.angelmaker.journey.supportFiles.DatePickerFragment;
 import com.angelmaker.journeyDatabase.ActivityInstance;
 

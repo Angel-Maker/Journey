@@ -29,19 +29,20 @@
     <string name="about_app_concept_title">Concept </string>
     <string name="about_app_concept_content">Almost everyone at some point has tried to develop a skill but dropped it for some reason.
         Maybe because life got complicated and there wasn\'t enough time for a while. Maybe because you had a specific goal you were
-        trying to reach but got discouraged on the way.Journey was designed to keep you working on the skill and does so in two ways.\n\n
-        1.Daily activity checkmarks to encourage not skipping days
-        2.A change in perspective from trying to reach a goal, to trying to improving a skill.
+        trying to reach but got discouraged on the way.Journey was designed to keep you working on the skill and does so in two ways.
+
+        \n\n1.Daily activity checkmarks to encourage not skipping days.
+        \n2.A change in perspective from trying to reach a goal, to trying to improving a skill.
  </string>
 
-    <string name="about_app_getting_started_title">Welcome to the Journey app! </string>
+    <string name="about_app_getting_started_title">Getting started </string>
     <string name="about_app_getting_started_content">1.Open the options menu in the top right of the main screen.\n
         2.Select the “Manage Journeys” option.\n
         3.Select “Start a new Journey”.\n
         4.Fill out the information and submit.\n
-        5.Return to the main menu.\n\n
+        5.Return to the main menu.
 
-        Every day that you meet your goal you can select that day and check it off. It is strongly encouraged to take
+        \n\nEvery day that you meet your goal you can select that day and check it off. It is strongly encouraged to take
         a picture, video,  make a note of your progress for the day and attach it to the activity you just checked off
         as well. Once you get to the last day of your journey, a new option will appear on the main menu to look back
         on all the progress you have made.
