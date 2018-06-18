@@ -38,7 +38,7 @@ public class DailyActivities extends AppCompatActivity {
     //Variables to record current date being accessed
     private Calendar selectedDate;
     private SimpleDateFormat sdfDisplay = new SimpleDateFormat("MMM dd", Locale.getDefault());
-    private SimpleDateFormat sdfDB = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+    private SimpleDateFormat sdfDB = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     private SimpleDateFormat sdfFile = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     //Gesture for day swipe transition
@@ -205,13 +205,10 @@ public class DailyActivities extends AppCompatActivity {
 
                 //Update DB URI entry
                 changedActivity.setAssociatedFile(newUri.toString());
-                activityViewModel.update(changedActivity);
+                activityViewModel.updateActivityInstance(changedActivity);
             }
         }
     }
-
-
-
 
 
 

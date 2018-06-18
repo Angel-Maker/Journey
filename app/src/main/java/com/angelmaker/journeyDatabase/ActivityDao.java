@@ -25,8 +25,13 @@ public interface ActivityDao {
     void insertActivityType(ActivityType activityType);
 
     //Updates an activity type
-    @Update
-    void updateActivityType(ActivityType activityType);
+    @Query ("UPDATE activity_types_table " +
+            "SET activityTypeName = :newActivityName, " +
+                "activityDescription = :newActivityDescription," +
+                "startDate = :newActivityStartDate ," +
+                "endDate = :newActivityEndDate " +
+            "WHERE activityTypeName = :activityToUpdate")
+    void updateActivityType(String activityToUpdate, String newActivityName, String newActivityDescription, String newActivityStartDate, String newActivityEndDate);
 
     //Removes an activity using activity type
     @Delete
@@ -36,6 +41,10 @@ public interface ActivityDao {
     @Query ("DELETE from activity_types_table WHERE activityTypeName = :removeActivityName")
     void deleteActivityType(String removeActivityName);
 
+    //Get all activity type info
+    @Query ("SELECT * FROM activity_types_table WHERE activityTypeName = :activityName")
+    ActivityType getFullActivityType(String activityName);
+
     //Find all unique activity category names
     @Query ("SELECT activityTypeName FROM activity_types_table")
     LiveData<List<String>> getActivityTypeNames();
@@ -44,9 +53,11 @@ public interface ActivityDao {
     @Query ("SELECT activityDescription from activity_types_table WHERE activityTypeName = :activityName")
     String getActivityTypeDescription(String activityName);
 
-    //Find description from an activity name
-    @Query ("SELECT activityTypeName AND endDate FROM activity_types_table")
-    List<String> getActivityTypeEndDate();
+    //Find finished activities
+    @Query ("SELECT activityTypeName FROM activity_types_table WHERE date(:currentDate)>date(endDate)")
+    List<String> getFinishedActivityTypes(String currentDate);
+
+
 
 
 
@@ -67,6 +78,10 @@ public interface ActivityDao {
     //Removes a list of activities
     @Delete
     void deleteActivityInstances(List<ActivityInstance> activityInstance);
+
+    //Get all activity instances given an activity name
+    @Query ("SELECT * FROM activity_instance_table WHERE activityInstanceName = :activityName")
+    List<ActivityInstance> getNamedActivityInstances(String activityName);
 
     //Finds all unique days that have a star on it
     @Query ("SELECT DISTINCT currentDate FROM activity_instance_table WHERE starred = 1")

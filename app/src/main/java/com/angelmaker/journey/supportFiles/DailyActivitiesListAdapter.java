@@ -1,10 +1,12 @@
 package com.angelmaker.journey.supportFiles;
 
 import android.app.Activity;
+import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.OpenableColumns;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 
 import com.angelmaker.journey.Activities.ActivityViewModel;
 import com.angelmaker.journey.R;
+import com.angelmaker.journeyDatabase.ActivityDao;
 import com.angelmaker.journeyDatabase.ActivityInstance;
 import com.angelmaker.journeyDatabase.ActivityType;
 
@@ -35,10 +38,10 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
 
     private ActivityViewModel activityViewModel;
 
-    private ExpandableListView expListView;
-    private ExpandableListAdapter listAdapter;
-    List<String> listDataHeader;
-    HashMap<String, List<String>> listDataChild;
+    private static ExpandableListView expListView;
+    private static ExpandableListAdapter listAdapter;
+    static List<String> listDataHeader;
+    static HashMap<String, List<String>> listDataChild;
 
 
     class ActivityViewHolder extends RecyclerView.ViewHolder
@@ -61,7 +64,13 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
     }
 
 
-    private void prepareListData(String activityDescription) {
+
+
+
+
+
+//Generates description
+    private static void prepareListData(String activityDescription) {
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
 
@@ -79,7 +88,7 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
     }
 
 
-    public void setupExpandableView() {
+    public static void setupExpandableView() {
         listAdapter = new DailyActivitiesExpandableListAdapter(androidActivity.getApplicationContext(), listDataHeader, listDataChild);
         expListView.setAdapter(listAdapter);
         final float scale = androidActivity.getApplicationContext().getResources().getDisplayMetrics().density; //Convert pixel to dp:  (int)(dps * scale + 0.5f);
@@ -105,8 +114,6 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
         });
     }
 
-
-
     private final LayoutInflater inflater;
     private List<ActivityInstance> activities; // Cached copy of words
 
@@ -120,6 +127,31 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
     {
         activityViewModel = newActivityViewModel;
     }
+
+
+    public void descriptionListSetup (String activityName) {
+        new descriptionListSetupAsyncTask(activityViewModel).execute(activityName);
+    }
+
+    private static class descriptionListSetupAsyncTask extends AsyncTask<String, Void, Void> {
+
+        private ActivityViewModel asyncTaskActivityViewModel;
+
+        descriptionListSetupAsyncTask(ActivityViewModel activityViewModel) {
+            asyncTaskActivityViewModel = activityViewModel;
+        }
+
+        @Override
+        protected Void doInBackground(String... activityName) {
+            prepareListData(asyncTaskActivityViewModel.getActivityDescription(activityName[0]));
+            return null;
+        }
+    }
+
+
+
+
+
 
     @Override
     public ActivityViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
@@ -139,8 +171,7 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
             //Setup Description
             String activityName = current.getActivityInstanceName();
 
-            prepareListData(activityViewModel.getActivityDescription(activityName));
-            setupExpandableView();
+            descriptionListSetup(activityName);
 
             //Setup completion checkbox
             holder.completionCB.setText(current.getActivityInstanceName());
@@ -154,7 +185,7 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
                 {
                     if (!holder.completionCB.isChecked()) { current.setCompleted(false); }
                     else { current.setCompleted(true); }
-                    activityViewModel.update(current);
+                    activityViewModel.updateActivityInstance(current);
                 }
             });
 
@@ -170,7 +201,7 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
                 {
                     if (!holder.starCB.isChecked()) { current.setStar(false); }
                     else { current.setStar(true); }
-                    activityViewModel.update(current);
+                    activityViewModel.updateActivityInstance(current);
                 }
             });
 
@@ -215,7 +246,7 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
                         androidActivity.getApplicationContext().getContentResolver().delete(uri, null, null);
                         current.setAssociatedFile(null);
                     }
-                    activityViewModel.update(current);
+                    activityViewModel.updateActivityInstance(current);
                 }
             });
         }
@@ -225,6 +256,8 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
             // Covers the case of data not being ready yet.
             holder.completionCB.setText("No Activities");
         }
+
+        setupExpandableView(); //Display description
     }
 
 
@@ -252,7 +285,7 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
     ActivityInstance currentActivity;
     public ActivityInstance getCurrentActivity(){return currentActivity;}
 
-    public Activity androidActivity;
+    public static Activity androidActivity;             //Made static to handle description population, may be dangerous
     public void setAndroidActivity(Activity newAndroidActivity){ androidActivity = newAndroidActivity;}
 
 

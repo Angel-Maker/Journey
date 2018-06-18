@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.angelmaker.journey.R;
 import com.angelmaker.journey.supportFiles.DatePickerFragment;
 import com.angelmaker.journeyDatabase.ActivityInstance;
+import com.angelmaker.journeyDatabase.ActivityType;
 
 import java.io.File;
 import java.text.ParseException;
@@ -45,7 +46,8 @@ public class NewActivity extends AppCompatActivity {
     private Date oldStartDate = null;
     private Date oldEndDate = null;
 
-    private SimpleDateFormat sdfDB = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+    private SimpleDateFormat sdfDB = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    private SimpleDateFormat sdfInput = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +122,7 @@ public class NewActivity extends AppCompatActivity {
                         Boolean folderCreated = createFileFolder(activityNameET.getText().toString());
 
                         if(folderCreated) {
-                            newActivities(startDate, endDate);
+                            newActivityType(startDate, endDate);
                             finish();
                         }
 
@@ -174,8 +176,8 @@ public class NewActivity extends AppCompatActivity {
                 if(!textView.getText().toString().equals(""))
                 {
                     //Set spinner to start on the selected date
-                    try { selectedDate.setTime(sdfDB.parse(textView.getText().toString()));}
-                    catch (ParseException e) { e.printStackTrace(); }
+                    try { selectedDate.setTime(sdfInput.parse(textView.getText().toString()));}
+                    catch (ParseException e) { Log.e("zzz", "Failed to set initial spinner dates!"); }
                 }
 
                 datePicker.setSpinnerDate(selectedDate);
@@ -195,13 +197,18 @@ public class NewActivity extends AppCompatActivity {
             //Check activity has a start and end dates
             if (!TextUtils.isEmpty(startDateTV.getText()) && !TextUtils.isEmpty(endDateTV.getText()))
             {
+                Log.i("zzz", "Date was set as: " + startDateTV.getText().toString());
+
                 try
                 {
-                    startDate = sdfDB.parse(startDateTV.getText().toString());
-                    endDate = sdfDB.parse(endDateTV.getText().toString());
+                    startDate = sdfInput.parse(startDateTV.getText().toString());   //Returned date is of form yyyy/MM/dd
+                    endDate = sdfInput.parse(endDateTV.getText().toString());
                 }
 
-                catch (ParseException e) {e.printStackTrace();}
+                catch (ParseException e) {
+                    Toast.makeText(getApplicationContext(), "---ERROR PARSING DATE---\nPLEASE TRY AGAIN OR CONTACT THE DEVELOPER", Toast.LENGTH_LONG).show();
+                    return false;
+                }
 
                 //Check that end date is equal or after start date
                 if(endDate.equals(startDate) || endDate.after(startDate))
@@ -218,46 +225,70 @@ public class NewActivity extends AppCompatActivity {
         return valid;
     }
 
-    //Creates new activities between two dates
-    private void newActivities(Date fromDate, Date toDate)
+
+    //newActivities
+
+    //Creates a new activityType
+    private void newActivityType(Date fromDate, Date toDate)
     {
         //Activity initialization variables
         String activityName = activityNameET.getText().toString();
         String activityDescription = descriptionET.getText().toString();
-        String activityStartDate = startDateTV.getText().toString();
-        String activityEndDate = endDateTV.getText().toString();
+        String activityStartDateText = startDateTV.getText().toString();
+        String activityEndDateText = endDateTV.getText().toString();
 
+        String activityStartDate = changeDateDelimitation(activityStartDateText, "-");
+        String activityEndDate = changeDateDelimitation(activityEndDateText, "-");
+
+        //Add new activity type to database
+        ActivityType newActivityType = new ActivityType();
+        newActivityType.setActivityTypeName(activityName);
+        newActivityType.setActivityDescription(activityDescription);
+        newActivityType.setStartDate(activityStartDate);
+        newActivityType.setEndDate(activityEndDate);
+
+        activityViewModel.insertActivityType(newActivityType);
+
+        newActivityInstance(activityName, fromDate, toDate);
+    }
+
+    //Changes format yyyy MM dd to use specified separating symbol
+    private String changeDateDelimitation(String date, String symbol){
+        String newDateFormat = date.substring(0,4) + symbol + date.substring(5,7) + symbol + date.substring(8,10);
+        return newDateFormat;
+    }
+
+    //Creates new activity instances
+    private void newActivityInstance(String activityName, Date fromDate, Date toDate)
+    {
         //Create calendar objects of dates
         Calendar startCalendar = Calendar.getInstance();
         Calendar endCalendar = Calendar.getInstance();
 
         startCalendar.setTime(fromDate);
         endCalendar.setTime(toDate);
+        endCalendar.add(Calendar.DATE, 1); //Incremented by one so that day is included in the creation
 
         //Create String instances of Calendar objects
         String currentDate = sdfDB.format(startCalendar.getTime());
-        endCalendar.add(Calendar.DATE, 1);
         String stopDate = sdfDB.format(endCalendar.getTime());
-        endCalendar.add(Calendar.DATE, -1);
 
-        List<ActivityInstance> newFullActivity = new ArrayList<>();
+        //Insert new activity instances
+        List<ActivityInstance> newActivityInstances = new ArrayList<>();
 
-        //Loop to generate unique androidActivity entries for every day in time frame window
-        while (!currentDate.equals(stopDate))
+        //Loop to generate unique activity entries for every day in time frame window
+        while (!currentDate.equals(stopDate))  //Comparison is done by string representation to ensure uniform formatting
         {
             ActivityInstance newActivity = new ActivityInstance();
-            newActivity.setActivityName(activityName);
-            newActivity.setActivityDescription(activityDescription);
-            newActivity.setStartDate(activityStartDate);
-            newActivity.setEndDate(activityEndDate);
+            newActivity.setActivityInstanceName(activityName);
             newActivity.setCurrentDate(currentDate);
 
-            newFullActivity.add(newActivity);
+            newActivityInstances.add(newActivity);
             startCalendar.add(Calendar.DATE, 1);
             currentDate = sdfDB.format(startCalendar.getTime());
         }
 
-        activityViewModel.insertMany(newFullActivity);
+        activityViewModel.insertActivityInstances(newActivityInstances);
     }
 
 
@@ -269,13 +300,12 @@ public class NewActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(final String... lists)
         {
-            List<ActivityInstance> fullActivity = activityViewModel.getFullActivity(lists[0]);
-            ActivityInstance activity = fullActivity.get(0);
+            ActivityType activityType = activityViewModel.getFullActivityTypes(lists[0]);
 
-            String oldName = activity.getActivityName();
-            String oldDescription = activity.getActivityDescription();
-            String oldStartDateString = activity.getStartDate();
-            String oldEndDateString = activity.getEndDate();
+            String oldName = activityType.getActivityTypeName();
+            String oldDescription = activityType.getActivityDescription();
+            String oldStartDateString = activityType.getStartDate();
+            String oldEndDateString = activityType.getEndDate();
             // oldStartDate (initialized elsewhere) contains the old start date in a Date variable
             // oldEndDate (initialized elsewhere) contains the old end date in a Date variable
 
@@ -293,26 +323,35 @@ public class NewActivity extends AppCompatActivity {
                     !newStartDateString.equals(oldStartDateString) ||
                     !newEndDateString.equals(oldEndDateString))
             {
-                List<ActivityInstance> activitiesToDelete = new ArrayList<ActivityInstance>();
-                List<ActivityInstance> activitiesToAdd = new ArrayList<ActivityInstance>();
-                List<ActivityInstance> activitiesToUpdate = new ArrayList<ActivityInstance>();
 
+                //Update activity type information
+                ActivityType updatedActivityType = new ActivityType();
+                updatedActivityType.setActivityTypeName(newName);
+                updatedActivityType.setActivityDescription(newDescription);
+                updatedActivityType.setStartDate(newStartDateString);
+                updatedActivityType.setEndDate(newEndDateString);
+                activityViewModel.updateActivityType(activityType, updatedActivityType);
 
-
-                //If start date has been moved backwards then add new entries as needed
-                if (oldStartDate.after(startDate)) { newStartDateActivities(oldStartDate); }
-
-                //If end date has been moved forward then add new entries as needed
-                if (endDate.after(oldEndDate)) { newEndDateActivities(oldEndDate); }
-
+                //Update folder name
                 if(!oldName.equals(newName)){
                     updateFolderName(oldName, newName);
                 }
 
+                List<ActivityInstance> activitiesToDelete = new ArrayList<ActivityInstance>();
+
+                //If start date has been moved backwards then add new entries as needed
+                if (oldStartDate.after(startDate)) { newStartDateActivities(newName, oldStartDate); }
+
+                //If end date has been moved forward then add new entries as needed
+                if (endDate.after(oldEndDate)) { newEndDateActivities(newName, oldEndDate); }
+
+
+                List<ActivityInstance> activities = activityViewModel.getNamedActivityInstances(oldName);
+
                 //Change existing activities
-                for (int i = 0; i < fullActivity.size(); i++)
+                for (int i = 0; i < activities.size(); i++)
                 {
-                    activity = fullActivity.get(i);                 //For each activity
+                    ActivityInstance activity = activities.get(i);                 //For each activity
                     Date activityCurrentDate = stringToDate(activity.getCurrentDate());
 
                     //If this activities record date is now outside the beginning of the date range, mark for deletion
@@ -320,46 +359,34 @@ public class NewActivity extends AppCompatActivity {
 
                     //If not deleted then if this activities record date is now outside the ending of the date range, mark for deletion
                     else if (activityCurrentDate.after(endDate)) { activitiesToDelete.add(activity); }
-
-                    //If still not deleted, update all fields
-                    else {
-                        activity.setActivityName(newName);
-                        activity.setActivityDescription(newDescription);
-                        activity.setStartDate(newStartDateString);
-                        activity.setEndDate(newEndDateString);
-
-                        activitiesToUpdate.add(activity);               //Add activity to be updated in DB
-                    }
                 }
 
-                if (activitiesToDelete.size() != 0) { activityViewModel.deleteMany(activitiesToDelete, getApplicationContext()); }
-                if (activitiesToUpdate.size() != 0){ activityViewModel.updateMany(activitiesToUpdate);}
-                if (activitiesToAdd.size() != 0) { activityViewModel.insertMany(activitiesToAdd); }
-
-                newActivityInstance.finish();
+                if (activitiesToDelete.size() != 0) { activityViewModel.deleteActivityInstances(activitiesToDelete, getApplicationContext()); }
             }
+
+            newActivityInstance.finish();
             return null;
         }
 
 
         //Creates activities for changes in the start date
-        private void newStartDateActivities(Date oldStartDate){
+        private void newStartDateActivities(String activityName, Date oldStartDate){
             Calendar cal = Calendar.getInstance();
             cal.setTime(oldStartDate);              //Get old start date to know when to stop adding days
             cal.add(Calendar.DATE, -1);         //Decrement by 1 to prevent duplicate entries for old start date
             Date insertionEndDate = cal.getTime();
 
-            newActivities(startDate, insertionEndDate); //Add activity entries from new start date to old start date (-1)
+            newActivityInstance(activityName, startDate, insertionEndDate); //Add activity entries from new start date to old start date (-1)
         }
 
         //Creates activities for changes in the end date
-        private void newEndDateActivities(Date oldEndDate){
+        private void newEndDateActivities(String activityName, Date oldEndDate){
             Calendar cal = Calendar.getInstance();
             cal.setTime(oldEndDate);                //Get old end date to know when to start adding days
             cal.add(Calendar.DATE, 1);          //Increment by 1 to prevent duplicate entries for old end date
             Date insertionStartDate = cal.getTime();
 
-            newActivities(insertionStartDate, endDate); //Add activity entries from old end date (+1) to new end date
+            newActivityInstance(activityName, insertionStartDate, endDate); //Add activity entries from old end date (+1) to new end date
         }
 
 
@@ -367,7 +394,7 @@ public class NewActivity extends AppCompatActivity {
             Date date = null;
 
             try { date = sdfDB.parse(dateString); }
-            catch (ParseException e) { e.printStackTrace(); }
+            catch (ParseException e) { Log.e("zzz", "Failed to set string to date!"); }
 
             return date;
         }
@@ -382,19 +409,23 @@ public class NewActivity extends AppCompatActivity {
     private class initializeFields extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(final String... lists) {
-            List<ActivityInstance> fullActivity = activityViewModel.getFullActivity(lists[0]);
-            ActivityInstance activity = fullActivity.get(0);
+            ActivityType activityType = activityViewModel.getFullActivityTypes(lists[0]);
 
-            activityNameET.setText(activity.getActivityName());
-            startDateTV.setText(activity.getStartDate());
-            endDateTV.setText(activity.getEndDate());
-            descriptionET.setText(activity.getActivityDescription());
+            activityNameET.setText(activityType.getActivityTypeName());
+            descriptionET.setText(activityType.getActivityDescription());
+
+            String startDateString = changeDateDelimitation(activityType.getStartDate(), "/");
+            String endDateString = changeDateDelimitation(activityType.getEndDate(), "/");
+            startDateTV.setText(startDateString);
+            endDateTV.setText(endDateString);
+
 
             try {
-                oldStartDate = sdfDB.parse(activity.getStartDate());
-                oldEndDate = sdfDB.parse(activity.getEndDate());
+                oldStartDate = sdfDB.parse(activityType.getStartDate());
+                oldEndDate = sdfDB.parse(activityType.getEndDate());
             }
-            catch (ParseException e) { e.printStackTrace(); }
+            catch (ParseException e) { Log.e("zzz", "Failed to set old dates! Date was: " + activityType.getStartDate());}
+
             return null;
         }
     }

@@ -38,7 +38,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".Activities.AboutApp"></activity>
+        <activity android:name=".Activities.AboutApp" />
+        <activity android:name=".Activities.JourneyView" />
+        <activity android:name=".Activities.FinishedJourneys"></activity>
     </application>
 
 </manifest>

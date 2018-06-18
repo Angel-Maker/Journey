@@ -33,7 +33,6 @@ public class DatePickerFragment extends DialogFragment
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        //Todo Decide whether to use Holo_Light or calendar view
         // Create a new instance of DatePickerDialog and return it
         DatePickerDialog dialog = new DatePickerDialog(
                 getActivity(),

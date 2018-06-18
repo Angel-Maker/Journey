@@ -44,6 +44,8 @@ public class ActivityRepository {
     //////////////////////////////////////////////////////////////////////////
     ///////////////////////// Activity Type //////////////////////////////////
     //////////////////////////////////////////////////////////////////////////
+    public List<String> getFinishedActivityTypes(String currentDate) { return activityDao.getFinishedActivityTypes(currentDate);}
+    public ActivityType getFullActivityType(String activityName) { return activityDao.getFullActivityType(activityName); }
     public LiveData<List<String>> getActivityNames() { return activityNames; }
     public String getActivityDescription(String activityName) { return activityDao.getActivityTypeDescription(activityName); }
 
@@ -67,9 +69,10 @@ public class ActivityRepository {
     }
 
     //Update an activity type
-    public void updateActivityType (ActivityType activityType) {
-        new updateActivityTypeAsyncTask(activityDao).execute(activityType);
+    public void updateActivityType (ActivityType oldActivityType, ActivityType newActivityType) {
+        new updateActivityTypeAsyncTask(activityDao).execute(oldActivityType, newActivityType);
     }
+
     private static class updateActivityTypeAsyncTask extends AsyncTask<ActivityType, Void, Void> {
 
         private ActivityDao asyncTaskDao;
@@ -80,7 +83,12 @@ public class ActivityRepository {
 
         @Override
         protected Void doInBackground(ActivityType... activityTypes) {
-            asyncTaskDao.updateActivityType(activityTypes[0]);
+            asyncTaskDao.updateActivityType(
+                    activityTypes[0].getActivityTypeName(),             //Index to update
+                    activityTypes[1].getActivityTypeName(),
+                    activityTypes[1].getActivityDescription(),
+                    activityTypes[1].getStartDate(),
+                    activityTypes[1].getEndDate());
             return null;
         }
     }
@@ -131,12 +139,14 @@ public class ActivityRepository {
     ///////////////////////// Activity Instance //////////////////////////////
     //////////////////////////////////////////////////////////////////////////
 
+    public List<ActivityInstance> getNamedActivityInstances(String activityName) { return activityDao.getNamedActivityInstances(activityName);}
     public LiveData<List<String>> getUniqueStarred() { return uniqueStarred; }
     public LiveData<List<ActivityInstance>> getDaysActivities() { return daysActivities; }
     public List<ActivityInstance> getSpecifiedDailyActivities(String specifiedDate) {
         List<ActivityInstance> daysActivities = activityDao.getSpecifiedDailyActivities(specifiedDate);
         return daysActivities;
     }
+
 
 
     //Adds a list of activities

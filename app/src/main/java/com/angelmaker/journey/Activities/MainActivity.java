@@ -1,5 +1,3 @@
-//todo - Track down reason for multiple dot icons in calendar after activity edits
-
 //todo - Add "About App" menu item with info on app and contact information
 
 //todo - Create "Journey View" that show progress over the time period
@@ -45,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static boolean fileStorageFolderCreated = false;
 
-    private SimpleDateFormat sdfDB = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+    private SimpleDateFormat sdfDB = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     private SimpleDateFormat sdfCalendarTitle = new SimpleDateFormat("MMM YYYY", Locale.getDefault());
     private Calendar selectedDate;
     private Button dailyActivityBtn;
@@ -54,7 +52,9 @@ public class MainActivity extends AppCompatActivity {
     private ActivityViewModel activityViewModel;
     private TextView noActivitiesTV;
     private Button completedJourneyBtn;
+    private List<String> finishedActivities;
 
+    static final int BACK_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.updateActivitiesMenuItem){
             Intent updateActivities = new Intent(this, UpdateActivities.class);
-            startActivity(updateActivities);
+            startActivityForResult(updateActivities, BACK_REQUEST);
         }
         if(item.getItemId() == R.id.aboutAppMenuItem){
             Intent aboutApp = new Intent(this, AboutApp.class);
@@ -171,10 +171,15 @@ public class MainActivity extends AppCompatActivity {
                 //Set visibility of no activity help message
                 if(activities.size() == 0){noActivitiesTV.setVisibility(View.VISIBLE);}
                 else{noActivitiesTV.setVisibility(View.INVISIBLE);}
-
-
             }
         });
+    }
+
+
+    public void completedJourneyBtn(View view) {
+        Intent journeyView = new Intent(this, FinishedJourneys.class);
+        journeyView.putExtra("EXTRA_FINISHED_ACTIVITIES", selectedDate.get(Calendar.MONTH));
+        startActivityForResult(journeyView, BACK_REQUEST);
     }
 
     public void dailyActivityBtn(View view) {
@@ -183,16 +188,16 @@ public class MainActivity extends AppCompatActivity {
         dailyActivities.putExtra("EXTRA_CURRENT_DATE", selectedDate.get(Calendar.DATE));
         dailyActivities.putExtra("EXTRA_CURRENT_MONTH", selectedDate.get(Calendar.MONTH));
 
-        startActivity(dailyActivities);
+        startActivityForResult(dailyActivities, BACK_REQUEST);
     }
 
 
 
-
     //Sets button text to selected date and number of completed activities
-    private class updateButtonText extends AsyncTask<String, Void, Void> {
+    private class updateButtonText extends AsyncTask<String, Void, List<String>> {
         @Override
-        protected Void doInBackground(final String... lists) {
+        protected List<String> doInBackground(final String... lists) {
+            //Update date selected button
             Log.i("zzz", "Change in DailyActivities");
 
             List<ActivityInstance> activities = activityViewModel.getSpecifiedDailyActivities(sdfDB.format(selectedDate.getTime()));
@@ -204,21 +209,58 @@ public class MainActivity extends AppCompatActivity {
 
 
             //Check each activity and tally the number of completed activities
-            for(int i = 0 ; i < activities.size() ; i++){
+            for (int i = 0; i < activities.size(); i++) {
                 activity = activities.get(i);
-                if(activity.getCompleted()){ completedActivities++; }
-                if(activity.getStar()){stared = true;}
+                if (activity.getCompleted()) {
+                    completedActivities++;
+                }
+                if (activity.getStar()) {
+                    stared = true;
+                }
             }
 
             String selectedDateString = sdfDB.format(selectedDate.getTime());
             String displayText = selectedDateString + "\nCompleated: " + completedActivities + "/" + activities.size();
             dailyActivityBtn.setText(displayText);
 
-            if(stared){dailyActivityBtn.setBackgroundColor(0xFFFFDF00);}    // 0xAARRGGBB    "Golden Yellow"
-            else{dailyActivityBtn.setBackgroundColor(0xFFC0C0C0);}          // 0xAARRGGBB    "Silver"
+            if (stared) {
+                dailyActivityBtn.setBackgroundColor(0xFFFFDF00);
+            }    // 0xAARRGGBB    "Golden Yellow"
+            else {
+                dailyActivityBtn.setBackgroundColor(0xFFC0C0C0);
+            }          // 0xAARRGGBB    "Silver"
 
 
-            return null;
+            //Update completed Journey button
+            Calendar todayCal = Calendar.getInstance();
+            String todayString = sdfDB.format(todayCal.getTime());
+
+            List<String> finishedActivities = activityViewModel.getFinishedActivityTypes(todayString);
+
+            return finishedActivities;
+        }
+
+        @Override
+        protected void onPostExecute(List<String> newFinishedActivities) {
+            finishedActivities = newFinishedActivities;
+
+            if(finishedActivities.size() != 0){
+                completedJourneyBtn.setVisibility(View.VISIBLE);
+                Log.i("zzz","There are: " + finishedActivities.size() + " finished activities and button should be visible");
+            }
+            else{
+                completedJourneyBtn.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // When activities return to main by back button, update button and calendar
+        if (requestCode == BACK_REQUEST) {
+            new updateButtonText().execute();
         }
     }
 }

@@ -43,9 +43,12 @@ public class ActivityViewModel extends AndroidViewModel{
     //////////////////////////////////////////////////////////////////////////
     ///////////////////////Commands for activity types////////////////////////
     //////////////////////////////////////////////////////////////////////////
-
+    public List<String> getFinishedActivityTypes(String currentDate) { return repository.getFinishedActivityTypes(currentDate);}
+    ActivityType getFullActivityTypes(String activityName) {return repository.getFullActivityType(activityName);}
     LiveData<List<String>> getActivityNames() {return activityNames;}
     public String getActivityDescription(String activityName) { return repository.getActivityDescription(activityName); }
+    public void insertActivityType(ActivityType activityType) {repository.insertActivityType(activityType);}
+    public void updateActivityType(ActivityType oldActivityType, ActivityType newActivityType) {repository.updateActivityType(oldActivityType, newActivityType); }
     public void deleteActivityType(String removeActivityName) {repository.deleteActivityType(removeActivityName); }
     public void deleteActivityType(ActivityType activityType) {repository.deleteActivityType(activityType); }
 
@@ -55,6 +58,7 @@ public class ActivityViewModel extends AndroidViewModel{
     ///////////////////////Commands for activity instances////////////////////
     //////////////////////////////////////////////////////////////////////////
 
+    public List<ActivityInstance> getNamedActivityInstances(String activityName) { return repository.getNamedActivityInstances(activityName);}
     LiveData<List<String>> getUniqueStarred() {return uniqueStarred;}
     LiveData<List<ActivityInstance>> getDailyActivities() {return dailyActivities;}
     public List<ActivityInstance> getSpecifiedDailyActivities(String specifiedDate) { return repository.getSpecifiedDailyActivities(specifiedDate); }
