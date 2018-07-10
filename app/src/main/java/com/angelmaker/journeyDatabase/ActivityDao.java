@@ -7,6 +7,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,9 +42,13 @@ public interface ActivityDao {
     @Query ("DELETE from activity_types_table WHERE activityTypeName = :removeActivityName")
     void deleteActivityType(String removeActivityName);
 
-    //Get all activity type info
+    //Get activity type info for specified activity name
     @Query ("SELECT * FROM activity_types_table WHERE activityTypeName = :activityName")
     ActivityType getFullActivityType(String activityName);
+
+    //Get all activity type info for activities before a date   (possible duplicate)
+    @Query ("SELECT * FROM activity_types_table WHERE endDate < :currentDate")
+    List<ActivityType> getFullActivityTypesByDate(String currentDate);
 
     //Find all unique activity category names
     @Query ("SELECT activityTypeName FROM activity_types_table")
@@ -54,8 +59,8 @@ public interface ActivityDao {
     String getActivityTypeDescription(String activityName);
 
     //Find finished activities
-    @Query ("SELECT activityTypeName FROM activity_types_table WHERE date(:currentDate)>date(endDate)")
-    List<String> getFinishedActivityTypes(String currentDate);
+    @Query ("SELECT * FROM activity_types_table WHERE date(:currentDate)>date(endDate)")
+    List<ActivityType> getFinishedActivityTypes(String currentDate);
 
 
 

@@ -9,6 +9,7 @@ import com.angelmaker.journeyDatabase.ActivityInstance;
 import com.angelmaker.journeyDatabase.ActivityRoomDatabase;
 import com.angelmaker.journeyDatabase.ActivityType;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -44,8 +45,9 @@ public class ActivityRepository {
     //////////////////////////////////////////////////////////////////////////
     ///////////////////////// Activity Type //////////////////////////////////
     //////////////////////////////////////////////////////////////////////////
-    public List<String> getFinishedActivityTypes(String currentDate) { return activityDao.getFinishedActivityTypes(currentDate);}
+    public ArrayList<ActivityType> getFinishedActivityTypes(String currentDate) { return (ArrayList<ActivityType>) activityDao.getFinishedActivityTypes(currentDate);}
     public ActivityType getFullActivityType(String activityName) { return activityDao.getFullActivityType(activityName); }
+    public List<ActivityType> getFullActivityTypesByDate(String date) { return activityDao.getFullActivityTypesByDate(date); }
     public LiveData<List<String>> getActivityNames() { return activityNames; }
     public String getActivityDescription(String activityName) { return activityDao.getActivityTypeDescription(activityName); }
 

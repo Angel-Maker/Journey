@@ -28,12 +28,14 @@ import android.widget.TextView;
 
 import com.angelmaker.journey.R;
 import com.angelmaker.journeyDatabase.ActivityInstance;
+import com.angelmaker.journeyDatabase.ActivityType;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityViewModel activityViewModel;
     private TextView noActivitiesTV;
     private Button completedJourneyBtn;
-    private List<String> finishedActivities;
+    private ArrayList<ActivityType> finishedActivities;
 
     static final int BACK_REQUEST = 1;
 
@@ -178,7 +180,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void completedJourneyBtn(View view) {
         Intent journeyView = new Intent(this, FinishedJourneys.class);
-        journeyView.putExtra("EXTRA_FINISHED_ACTIVITIES", selectedDate.get(Calendar.MONTH));
+
+        journeyView.putExtra("EXTRA_FINISHED_ACTIVITIES", finishedActivities);
         startActivityForResult(journeyView, BACK_REQUEST);
     }
 
@@ -194,9 +197,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Sets button text to selected date and number of completed activities
-    private class updateButtonText extends AsyncTask<String, Void, List<String>> {
+    private class updateButtonText extends AsyncTask<String, Void, ArrayList<ActivityType>> {
         @Override
-        protected List<String> doInBackground(final String... lists) {
+        protected ArrayList<ActivityType> doInBackground(final String... lists) {
             //Update date selected button
             Log.i("zzz", "Change in DailyActivities");
 
@@ -235,13 +238,13 @@ public class MainActivity extends AppCompatActivity {
             Calendar todayCal = Calendar.getInstance();
             String todayString = sdfDB.format(todayCal.getTime());
 
-            List<String> finishedActivities = activityViewModel.getFinishedActivityTypes(todayString);
+            ArrayList<ActivityType> finishedActivities = activityViewModel.getFinishedActivityTypes(todayString);
 
             return finishedActivities;
         }
 
         @Override
-        protected void onPostExecute(List<String> newFinishedActivities) {
+        protected void onPostExecute(ArrayList<ActivityType> newFinishedActivities) {
             finishedActivities = newFinishedActivities;
 
             if(finishedActivities.size() != 0){

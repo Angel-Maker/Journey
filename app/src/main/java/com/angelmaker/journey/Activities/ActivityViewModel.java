@@ -10,6 +10,7 @@ import com.angelmaker.journeyDatabase.ActivityInstance;
 import com.angelmaker.journey.supportFiles.ActivityRepository;
 import com.angelmaker.journeyDatabase.ActivityType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,8 +44,9 @@ public class ActivityViewModel extends AndroidViewModel{
     //////////////////////////////////////////////////////////////////////////
     ///////////////////////Commands for activity types////////////////////////
     //////////////////////////////////////////////////////////////////////////
-    public List<String> getFinishedActivityTypes(String currentDate) { return repository.getFinishedActivityTypes(currentDate);}
+    public ArrayList<ActivityType> getFinishedActivityTypes(String currentDate) { return repository.getFinishedActivityTypes(currentDate);}
     ActivityType getFullActivityTypes(String activityName) {return repository.getFullActivityType(activityName);}
+    List<ActivityType> getFullActivityTypesByDate(String date) { return repository.getFullActivityTypesByDate(date); }
     LiveData<List<String>> getActivityNames() {return activityNames;}
     public String getActivityDescription(String activityName) { return repository.getActivityDescription(activityName); }
     public void insertActivityType(ActivityType activityType) {repository.insertActivityType(activityType);}

@@ -5,8 +5,10 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
 @Entity(tableName = "activity_types_table")   // What table the entry exists in
-public class ActivityType {
+public class ActivityType implements Serializable{
 
     @PrimaryKey
     @NonNull
