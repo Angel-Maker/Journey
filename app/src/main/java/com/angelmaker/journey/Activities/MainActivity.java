@@ -1,6 +1,7 @@
 //todo - Add "About App" menu item with info on app and contact information
 
 //todo - Create "Journey View" that show progress over the time period
+//todo - Fix Details display in daily activity
 
 //todo - Clean up code
 //todo - Distribute beta test copies

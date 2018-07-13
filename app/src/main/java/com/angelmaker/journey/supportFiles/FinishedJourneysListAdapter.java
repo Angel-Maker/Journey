@@ -88,10 +88,12 @@ public class FinishedJourneysListAdapter extends RecyclerView.Adapter<FinishedJo
     }
 
     @Override
-    public int getItemCount() {
+    public int getItemCount()
+    {
         if (finishedActivities != null)
             return finishedActivities.size();
-        else return 0;    }
+        else return 0;
+    }
 
 
     public void setActivityNames(ArrayList<ActivityType> newActivityNames)
@@ -99,24 +101,4 @@ public class FinishedJourneysListAdapter extends RecyclerView.Adapter<FinishedJo
         finishedActivities = newActivityNames;
         notifyDataSetChanged();
     }
-
-
-
-
-
-/*
-    //Sets button text to selected date and number of completed activities
-    private class populateRecyclerView extends AsyncTask<String, Void, Void> {
-
-        @Override
-        protected Void doInBackground(final String... lists) {
-            //activityViewModel.getActivityDates
-            return null;
-        }
-
-        @Override
-        protected Void onPostExecute(Void voidd) {
-
-        }
-    }*/
 }

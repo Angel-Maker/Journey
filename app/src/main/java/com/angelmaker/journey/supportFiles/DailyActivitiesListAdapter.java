@@ -206,10 +206,20 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
             });
 
 
-            if (current.getAssociatedFile() != null) {holder.fileTV.setText(getFileName(Uri.parse(current.getAssociatedFile())));
+            if (current.getAssociatedFile() != null)
+            {
+                String fileName = getFileName(Uri.parse(current.getAssociatedFile()), androidActivity);
+                String fileTitle = fileName.substring(12);
+
+                holder.fileTV.setText(fileTitle);
                 Log.i("zzz", "Text View set to: " + holder.fileTV.getText());
             }
-            else{holder.fileTV.setText("Select a file to attach");}
+
+            else
+                {
+                    holder.fileTV.setText("Select a file to attach");
+                }
+
 
             //Setup file selector TextView
             holder.fileTV.setOnClickListener(new View.OnClickListener()
@@ -311,10 +321,10 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
 
 
 
-    public String getFileName(Uri uri)
+    public static String getFileName(Uri uri, Activity localAndroidActivity)
     {
         String fileName = "FileNameError";
-        Cursor cursor = androidActivity.getContentResolver()
+        Cursor cursor = localAndroidActivity.getContentResolver()
                 .query(uri, null, null, null, null, null);
 
         try {

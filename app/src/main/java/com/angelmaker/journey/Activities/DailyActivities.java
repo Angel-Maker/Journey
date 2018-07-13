@@ -183,7 +183,7 @@ public class DailyActivities extends AppCompatActivity {
                 Uri uri = resultData.getData();
                 ActivityInstance changedActivity = adapter.getCurrentActivity();
 
-                String shortName = adapter.getFileName(uri);
+                String shortName = adapter.getFileName(uri, this);
                 final String filepath = getApplicationContext().getFilesDir() + "/linked_files/"
                         + changedActivity.getActivityInstanceName() + "/"
                         + sdfFile.format(selectedDate.getTime()) + ": " + shortName;
