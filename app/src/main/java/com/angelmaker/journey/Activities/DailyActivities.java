@@ -188,6 +188,8 @@ public class DailyActivities extends AppCompatActivity {
                         + changedActivity.getActivityInstanceName() + "/"
                         + sdfFile.format(selectedDate.getTime()) + ": " + shortName;
 
+                Log.i("zzz", "filepath name is: " + filepath);
+
                 File targetLocation = new File(filepath);
 
                 //Copy file to app storage

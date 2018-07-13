@@ -9,13 +9,23 @@
     <TextView
         android:id="@+id/journeyTitleTV"
         android:layout_width="wrap_content"
-        android:layout_height="34dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Your Journey for: "
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/saveBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Save to downloads folder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/journeyTitleTV" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/journeyViewRV"
@@ -25,5 +35,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/journeyTitleTV" />
+        app:layout_constraintTop_toBottomOf="@+id/saveBtn" />
+
 </android.support.constraint.ConstraintLayout>

@@ -57,18 +57,11 @@ public class JourneyViewListAdapter extends RecyclerView.Adapter<JourneyViewList
 
     @Override
     public void onBindViewHolder(@NonNull JourneyViewListAdapter.ActivityViewHolder holder, int position) {
-        Log.i("zzz", "Activity:");
         if (activities != null)
         {
-            Log.i("zzz", "Non null:");
             final ActivityInstance activity = activities.get(position);
 
-            Log.i("zzz", activity.getCurrentDate());
-            Log.i("zzz", activity.getAssociatedFile());
-
             Uri uri = Uri.parse(activity.getAssociatedFile());
-
-            Log.i("zzz", "uri extracted");
 
             String fileName = DailyActivitiesListAdapter.getFileName(uri, androidActivity);
             holder.fileNameTV.setText(fileName);
