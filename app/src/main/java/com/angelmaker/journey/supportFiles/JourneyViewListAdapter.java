@@ -2,6 +2,7 @@ package com.angelmaker.journey.supportFiles;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -71,6 +72,18 @@ public class JourneyViewListAdapter extends RecyclerView.Adapter<JourneyViewList
 
             String fileName = DailyActivitiesListAdapter.getFileName(uri, androidActivity);
             holder.fileNameTV.setText(fileName);
+
+            holder.fileNameTV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent openFile = new Intent();
+                    openFile.setAction(Intent.ACTION_VIEW);
+                    Uri uri = Uri.parse(activity.getAssociatedFile());
+                    openFile.setData(uri);
+                    openFile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    androidActivity.startActivity(openFile);
+                }
+            });
 
             if(activity.getStar()){
                 holder.containingLL.setBackgroundColor(0xFFFFDF00);
