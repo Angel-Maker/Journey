@@ -12,49 +12,50 @@
 
     <string name="about_app_what_is_journey_title">What is Journey? </string>
     <string name="about_app_what_is_journey_content">Journey is a scheduling app
-        designed to help with develop skills or make progress on personal projects. </string>
+        designed to help develop skills or make progress on personal projects. </string>
 
     <string name="about_app_concept_title">Concept </string>
-    <string name="about_app_concept_content">Almost everyone at some point has tried to develop a skill but dropped it for some reason.
-        Maybe because life got complicated and there wasn\'t enough time for a while. Maybe because you had a specific goal you were
-        trying to reach but got discouraged on the way.Journey was designed to keep you working on the skill and does so in two ways.
+    <string name="about_app_concept_content">Almost everyone at some point has tried to develop a skill but dropped it for one reason or another.
+        Maybe because life got complicated and there wasn\'t enough time to pursue it. Maybe because you had a specific goal you were
+        trying to reach but got discouraged on the way. Journey was designed to help keep you working on the skill and does so in two ways:
 
-        \n\n1.Daily activity checkmarks to encourage not skipping days.
-        \n2.A change in perspective from trying to reach a goal, to trying to improving a skill.
+        \n\n1. Daily activity checkmarks to encourage not skipping days.
+        \n\n2. A change in perspective from trying to reach a goal, to trying to make progress.
  </string>
 
-    <string name="about_app_getting_started_title">Getting started </string>
-    <string name="about_app_getting_started_content">1.Open the options menu in the top right of the main screen.\n
-        2.Select the “Manage Journeys” option.\n
-        3.Select “Start a new Journey”.\n
-        4.Fill out the information and submit.\n
-        5.Return to the main menu.
+    <string name="about_app_getting_started_title">Getting started  </string>
+    <string name="about_app_getting_started_content">1. Open the options menu in the top right of the main screen.\n
+        2. Select the “Update Journeys” option.\n
+        3. Select “New Journey”.\n
+        4. Fill out the requested information and submit.\n
+        5. Return to the main menu.
 
         \n\nEvery day that you meet your goal you can select that day and check it off. It is strongly encouraged to take
-        a picture, video,  make a note of your progress for the day and attach it to the activity you just checked off
+        a picture, video, or make a note of your progress for the day and attach it to the activity you just checked off
         as well. Once you get to the last day of your journey, a new option will appear on the main menu to look back
-        on all the progress you have made.
+        on all the progress you have made based on the files you uploaded. If the day had extra significance such as
+        reaching a milestone or doing particularly well, you can start the activity on that day to highlight it.
  </string>
 
     <string name="about_app_recommendations_title">Activity recommendations </string>
-    <string name="about_app_recommendations_content">You can select any type of activity and set any type of goal per day but the following
+    <string name="about_app_recommendations_content">Although you can select any type of activity and set any type of goal per day, the following
         are some recommendations that may improve experience with the app. Pick activities that you have some way of recording progress such
         as drawing and attach each picture you draw, running and create a text file with the distance you ran, or music and record yourself
         playing. Keep the activities short so you can’t excuse yourself from it by thinking you don’t have time. Try to keep the activities
-        to under 10 minutes. When selecting a period of time, choose a day far enough in the future that you can see your improvement. Try 6
-        month or a year. If the activity involves a tool or location that you don’t always have access to, think of a backup action that would
-        still help make progress with the skill such as reading guides.
+        to under 10 minutes. When selecting a period of time for the activity, choose a day far enough in the future that you will be able to
+        see your improvement. Try 6 month or a year. If the activity involves a tool or location that you don’t always have access to, think
+        of a backup action that would still help make progress with the skill such as reading guides, preparing gear, or making plans for the
+        next time you do have access.
  </string>
 
     <string name="about_app_developer_title">The developer </string>
     <string name="about_app_developer_content">Hi! I am the developer of Journey and founder of the AngelMaker design team. I have a strong
-        belief in producing free apps and allowing each user to contribute the amount of money they want to the app developer.This is my
+        belief in producing free apps and allowing each user to contribute the amount of money they want to the app developer. This is my
         first app and first published product but I plan to make more apps, some websites, and possibly a vr games in the future.
 </string>
 
     <string name="about_app_feedback_title">Feedback/Contact </string>
     <string name="about_app_feedback_content">I would love to hear feedback about your experience with the app and any suggestions or
-        criticisms. Please send an email to AngelMakerContact@gmail.com or leave a comment in the app store. </string>
-
-
+        criticisms! Please send an email to <b>AngelMakerContact@gmail.com</b> or leave a comment in the app store. I will be taking a break from
+        this project for a few month but afterwards I will try to update the app with the top requested features and improvements.</string>
 </resources>

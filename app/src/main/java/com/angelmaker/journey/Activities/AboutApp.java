@@ -73,7 +73,7 @@ public class AboutApp extends AppCompatActivity {
         listDataChild.put(listDataHeader.get(5), feedback);
 
 
-        listAdapter = new DailyActivitiesExpandableListAdapter(getApplicationContext(), listDataHeader, listDataChild);
+        listAdapter = new DailyActivitiesExpandableListAdapter(getApplicationContext(), listDataHeader, listDataChild, 1);
         expListView.setAdapter(listAdapter);
 
     }

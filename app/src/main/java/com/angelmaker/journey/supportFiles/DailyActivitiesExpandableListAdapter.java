@@ -17,13 +17,14 @@ public class DailyActivitiesExpandableListAdapter extends BaseExpandableListAdap
     private Context context;
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
-
+    private int fontSizeFlag; // 0 = small, 1 = big
 
     public DailyActivitiesExpandableListAdapter(Context activityContext, List<String> listDataHeaderContent,
-                                                HashMap<String, List<String>> listDataChildContent){
+                                                HashMap<String, List<String>> listDataChildContent, int fontSize){
         context = activityContext;
         listDataHeader = listDataHeaderContent;
         listDataChild = listDataChildContent;
+        fontSizeFlag = fontSize;
     }
 
     @Override
@@ -69,7 +70,13 @@ public class DailyActivitiesExpandableListAdapter extends BaseExpandableListAdap
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.list_group, null);
+
+            if(fontSizeFlag == 0){
+                convertView = infalInflater.inflate(R.layout.list_group, null);
+            }
+            else{
+                convertView = infalInflater.inflate(R.layout.list_group_large, null);
+            }
         }
 
         TextView lblListHeader = (TextView) convertView

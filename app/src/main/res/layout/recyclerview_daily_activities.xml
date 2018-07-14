@@ -37,7 +37,7 @@
         android:id="@+id/descriptionETV"
 
         android:layout_width="match_parent"
-        android:layout_height="13dp"
+        android:layout_height="15dp"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false" />
 

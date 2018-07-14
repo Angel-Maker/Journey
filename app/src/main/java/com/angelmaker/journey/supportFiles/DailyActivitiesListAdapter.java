@@ -89,7 +89,7 @@ public class DailyActivitiesListAdapter extends RecyclerView.Adapter<DailyActivi
 
 
     public static void setupExpandableView() {
-        listAdapter = new DailyActivitiesExpandableListAdapter(androidActivity.getApplicationContext(), listDataHeader, listDataChild);
+        listAdapter = new DailyActivitiesExpandableListAdapter(androidActivity.getApplicationContext(), listDataHeader, listDataChild, 0);
         expListView.setAdapter(listAdapter);
         final float scale = androidActivity.getApplicationContext().getResources().getDisplayMetrics().density; //Convert pixel to dp:  (int)(dps * scale + 0.5f);
 

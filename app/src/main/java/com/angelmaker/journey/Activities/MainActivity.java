@@ -1,7 +1,11 @@
-//todo - Add "About App" menu item with info on app and contact information
-
-//todo - Create "Journey View" that show progress over the time period
+//todo - Edit "About App"
 //todo - Fix Details display in daily activity
+//todo - Adjust what is defaulted to load in main screen (no activities message sometimes shows up for a moment)
+//todo - (time permitting) Make daily activity view transition properly
+//todo - (time permitting) Make main display show multiple dots if multiple stared activities
+//todo - (time permitting) Add notes to daily activities
+//todo - (time permitting) Create finishing presentation of Journey based on medium selected.
+//todo - (time permitting) Allow selective files to be saved to downloads after finishing a Journey instead of all files
 
 //todo - Clean up code
 //todo - Distribute beta test copies
@@ -51,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private static boolean fileStorageFolderCreated = false;
 
     private SimpleDateFormat sdfDB = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-    private SimpleDateFormat sdfCalendarTitle = new SimpleDateFormat("MMM YYYY", Locale.getDefault());
+    private SimpleDateFormat sdfCalendarTitle = new SimpleDateFormat("MMM yyyy", Locale.getDefault());
     private Calendar selectedDate;
     private Button dailyActivityBtn;
     private CompactCalendarView compactCalendar;
@@ -106,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         new updateButtonText().execute();
-
+        new setVisibilityOfFJB().execute();
         checkPermissions();
     }
 
@@ -213,14 +217,20 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Sets button text to selected date and number of completed activities
-    private class updateButtonText extends AsyncTask<String, Void, ArrayList<ActivityType>> {
+    private class updateButtonText extends AsyncTask<String, Void, List<ActivityInstance>> {
         @Override
-        protected ArrayList<ActivityType> doInBackground(final String... lists) {
+        protected List<ActivityInstance> doInBackground(final String... lists) {
             //Update date selected button
             Log.i("zzz", "Change in DailyActivities");
 
             List<ActivityInstance> activities = activityViewModel.getSpecifiedDailyActivities(sdfDB.format(selectedDate.getTime()));
 
+
+            return activities;
+        }
+
+        @Override
+        protected void onPostExecute(List<ActivityInstance> activities) {
             //Executed whenever the observed object changes
             int completedActivities = 0;
             Boolean stared = false;
@@ -248,8 +258,17 @@ public class MainActivity extends AppCompatActivity {
             else {
                 dailyActivityBtn.setBackgroundColor(0xFFC0C0C0);
             }          // 0xAARRGGBB    "Silver"
+        }
+    }
 
 
+
+
+    //Update visibility of finished Journey button
+    private class setVisibilityOfFJB extends AsyncTask<String, Void, ArrayList<ActivityType>> {
+        @Override
+        protected ArrayList<ActivityType> doInBackground(final String... lists)
+        {
             //Update completed Journey button
             Calendar todayCal = Calendar.getInstance();
             String todayString = sdfDB.format(todayCal.getTime());
@@ -263,15 +282,19 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<ActivityType> newFinishedActivities) {
             finishedActivities = newFinishedActivities;
 
+            //Set visibility of FinishedJourneyBtn
             if(finishedActivities.size() != 0){
                 completedJourneyBtn.setVisibility(View.VISIBLE);
-                Log.i("zzz","There are: " + finishedActivities.size() + " finished activities and button should be visible");
             }
             else{
                 completedJourneyBtn.setVisibility(View.INVISIBLE);
             }
         }
     }
+
+
+
+
 
 
 
